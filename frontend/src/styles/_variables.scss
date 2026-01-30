@@ -1,0 +1,76 @@
+// Dark Neon Theme Variables
+@use "sass:color";
+
+// Background Colors
+$bg-dark: #0a0a0f;
+$bg-darker: #050508;
+$bg-card: #12121a;
+$bg-card-hover: #1a1a25;
+
+// Neon Accent Colors
+$neon-cyan: #00f0ff;
+$neon-magenta: #ff00aa;
+$neon-lime: #00ff88;
+$neon-red: #ff3355;
+$neon-purple: #9945ff;
+$neon-orange: #ff6600;
+
+// Darkened versions (pre-calculated to avoid darken() deprecation)
+$neon-cyan-dark: color.adjust($neon-cyan, $lightness: -15%);
+$neon-lime-dark: color.adjust($neon-lime, $lightness: -15%);
+$neon-red-dark: color.adjust($neon-red, $lightness: -15%);
+
+// Text Colors
+$text-primary: #ffffff;
+$text-secondary: #a0a0b0;
+$text-muted: #606070;
+
+// Badge Colors
+$badge-clown: #666680;
+$badge-novice: #cd7f32;
+$badge-warrior: #c0c0c0;
+$badge-king: #ffd700;
+
+// Glows
+$glow-cyan: 0 0 20px rgba(0, 240, 255, 0.5);
+$glow-magenta: 0 0 20px rgba(255, 0, 170, 0.5);
+$glow-lime: 0 0 20px rgba(0, 255, 136, 0.5);
+$glow-red: 0 0 20px rgba(255, 51, 85, 0.5);
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-full: 50%;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+
+// Z-Index Scale
+$z-nav: 100;
+$z-modal: 200;
+$z-toast: 300;
+
+// Fonts
+$font-mono: "JetBrains Mono", "Fira Code", monospace;
+$font-sans:
+  "Inter",
+  "Segoe UI",
+  -apple-system,
+  sans-serif;

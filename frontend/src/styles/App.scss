@@ -1,0 +1,837 @@
+@use "sass:color";
+@use "./variables" as *;
+@use "./mixins" as *;
+@use "./animations" as *;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+// Global Reset & Base Styles
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-sans;
+  background: $bg-dark;
+  color: $text-primary;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @include scrollbar-dark;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// App Container
+.app {
+  @include flex-column;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  padding-bottom: 80px; // Space for bottom nav
+
+  @include responsive(mobile) {
+    max-width: 100%;
+  }
+}
+
+// Page Container
+.page {
+  @include flex-column;
+  flex: 1;
+  padding: $spacing-lg;
+  animation: slide-up 0.4s ease;
+
+  &__header {
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: $spacing-xs;
+
+      span {
+        color: $neon-cyan;
+      }
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Bottom Navigation
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 70px;
+  background: rgba(10, 10, 15, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: $z-nav;
+  @include flex-center;
+
+  &__container {
+    @include flex-between;
+    width: 100%;
+    padding: 0 $spacing-lg;
+  }
+
+  &__item {
+    @include flex-column;
+    @include flex-center;
+    gap: $spacing-xs;
+    padding: $spacing-sm $spacing-md;
+    color: $text-muted;
+    text-decoration: none;
+    transition: all $transition-normal;
+    border-radius: $radius-md;
+
+    &:hover {
+      color: $text-secondary;
+    }
+
+    &.active {
+      color: $neon-cyan;
+
+      .bottom-nav__icon {
+        @include text-glow($neon-cyan);
+      }
+    }
+  }
+
+  &__icon {
+    font-size: 1.5rem;
+    transition: all $transition-normal;
+  }
+
+  &__label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Home Page Styles
+.home {
+  @include flex-column;
+  @include flex-center;
+  flex: 1;
+  gap: $spacing-xl;
+  text-align: center;
+  padding-top: $spacing-xxl;
+
+  &__badge {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    @include flex-center;
+    animation: float 4s ease-in-out infinite;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.02)
+    );
+    box-shadow:
+      0 0 30px rgba($neon-cyan, 0.2),
+      inset 0 0 20px rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba($neon-cyan, 0.3);
+
+    svg,
+    img {
+      width: 85%;
+      height: 85%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  &__badge-label {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-top: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background: linear-gradient(
+      135deg,
+      $neon-cyan,
+      $neon-magenta,
+      $neon-lime,
+      $neon-cyan
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation:
+      gradient-shift 3s ease infinite,
+      text-glow-pulse 2s ease-in-out infinite;
+    text-shadow: 0 0 30px rgba($neon-cyan, 0.5);
+  }
+
+  &__counter {
+    @include flex-column;
+    gap: $spacing-md;
+
+    &-label {
+      font-size: 0.85rem;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    &-time {
+      font-family: $font-mono;
+      font-size: 3rem;
+      font-weight: 700;
+      color: $neon-cyan;
+      @include text-glow($neon-cyan);
+      animation: glow-pulse 3s ease-in-out infinite;
+      letter-spacing: 2px;
+
+      @include responsive(mobile) {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  &__status {
+    font-size: 1.1rem;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+
+  &__actions {
+    @include flex-column;
+    gap: $spacing-md;
+    width: 100%;
+    max-width: 280px;
+    margin-top: $spacing-lg;
+  }
+
+  &__next-badge {
+    margin-top: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: $radius-md;
+    font-size: 0.8rem;
+    color: $text-muted;
+
+    strong {
+      color: $neon-cyan;
+    }
+  }
+}
+
+// Button Styles
+.btn {
+  @include button-base;
+
+  &--primary {
+    background: linear-gradient(135deg, $neon-cyan, $neon-cyan-dark);
+    color: $bg-dark;
+    @include neon-glow($neon-cyan);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba($neon-cyan, 0.5);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  &--success {
+    background: linear-gradient(135deg, $neon-lime, $neon-lime-dark);
+    color: $bg-dark;
+    @include neon-glow($neon-lime);
+    animation: pulse 2s ease-in-out infinite;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba($neon-lime, 0.5);
+      animation: none;
+    }
+  }
+
+  &--danger {
+    background: linear-gradient(135deg, $neon-red, $neon-red-dark);
+    color: $text-primary;
+    @include neon-glow($neon-red);
+
+    &:hover:not(:disabled) {
+      animation: shake 0.5s ease-in-out;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.05);
+      color: $text-primary;
+    }
+  }
+
+  &--large {
+    padding: $spacing-lg $spacing-xl;
+    font-size: 1.1rem;
+    border-radius: $radius-lg;
+  }
+}
+
+// History Page Styles
+.history {
+  &__list {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__card {
+    @include card-base;
+    @include flex-between;
+    animation: slide-in-right 0.4s ease;
+    animation-delay: calc(var(--index) * 0.1s);
+    animation-fill-mode: backwards;
+
+    &-info {
+      @include flex-column;
+      gap: $spacing-xs;
+    }
+
+    &-date {
+      font-size: 0.85rem;
+      color: $text-muted;
+    }
+
+    &-duration {
+      font-family: $font-mono;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $neon-lime;
+    }
+
+    &-badge {
+      font-size: 2rem;
+    }
+  }
+
+  &__empty {
+    @include flex-column;
+    @include flex-center;
+    gap: $spacing-md;
+    padding: $spacing-xxl;
+    text-align: center;
+    color: $text-muted;
+
+    &-icon {
+      font-size: 4rem;
+      opacity: 0.3;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  &__clear-btn {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    background: rgba($neon-red, 0.1);
+    border: 1px solid rgba($neon-red, 0.3);
+    color: $neon-red;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all $transition-normal;
+
+    &:hover {
+      background: rgba($neon-red, 0.2);
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Page header row for alignment
+.page__header-row {
+  @include flex-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+// Modal Styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  @include flex-center;
+  z-index: $z-modal;
+  animation: fade-in 0.2s ease;
+}
+
+.modal {
+  @include card-base;
+  position: relative;
+  width: calc(100% - $spacing-xl * 2);
+  max-width: 360px;
+  padding: $spacing-xl;
+  text-align: center;
+  animation: slide-up 0.3s ease;
+
+  &__close {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all $transition-normal;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-primary;
+    }
+  }
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: $spacing-md;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__message {
+    font-size: 0.9rem;
+    color: $text-secondary;
+    line-height: 1.6;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__actions {
+    @include flex-center;
+    gap: $spacing-md;
+
+    .btn {
+      flex: 1;
+      min-width: 100px;
+    }
+  }
+}
+
+// Emergency Page Styles
+.emergency {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  background: $bg-dark;
+  z-index: $z-modal;
+  overflow: hidden;
+
+  &__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: $spacing-md $spacing-lg;
+    @include flex-between;
+    z-index: 10;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+
+    h2 {
+      font-size: 1.1rem;
+      color: $neon-magenta;
+      font-weight: 600;
+    }
+  }
+
+  &__close {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-full;
+    background: rgba(255, 255, 255, 0.1);
+    color: $text-primary;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all $transition-normal;
+    border: none;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &__videos {
+    height: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__video-container {
+    height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    position: relative;
+    @include flex-center;
+    background: $bg-darker;
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  }
+
+  &__controls {
+    position: absolute;
+    bottom: 100px;
+    right: $spacing-lg;
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__control-btn {
+    @include flex-center;
+    width: 50px;
+    height: 50px;
+    border-radius: $radius-full;
+    background: rgba(0, 0, 0, 0.5);
+    color: $text-primary;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all $transition-normal;
+    border: none;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    &.active {
+      color: $neon-magenta;
+    }
+  }
+}
+
+// Check-In Page Styles
+.checkin {
+  &__quote {
+    @include card-base;
+    margin-bottom: $spacing-xl;
+    text-align: center;
+    padding: $spacing-xl;
+
+    &-text {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: $text-primary;
+      line-height: 1.7;
+      margin-bottom: $spacing-md;
+    }
+
+    &-author {
+      font-size: 0.85rem;
+      color: $neon-cyan;
+      font-weight: 500;
+    }
+
+    &-refresh {
+      margin-top: $spacing-md;
+      padding: $spacing-sm $spacing-md;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: $radius-md;
+      color: $text-secondary;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all $transition-normal;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: $text-primary;
+      }
+    }
+  }
+
+  &__mood {
+    margin-bottom: $spacing-xl;
+
+    &-label {
+      font-size: 0.9rem;
+      color: $text-secondary;
+      margin-bottom: $spacing-md;
+      text-align: center;
+    }
+
+    &-options {
+      @include flex-center;
+      gap: $spacing-lg;
+    }
+
+    &-option {
+      @include flex-column;
+      @include flex-center;
+      gap: $spacing-sm;
+      padding: $spacing-lg;
+      border-radius: $radius-lg;
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all $transition-normal;
+      flex: 1;
+      max-width: 100px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      &.selected {
+        border-color: $neon-cyan;
+        background: rgba($neon-cyan, 0.1);
+
+        .checkin__mood-icon {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    &-icon {
+      font-size: 2.5rem;
+      transition: all $transition-normal;
+    }
+
+    &-text {
+      font-size: 0.75rem;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &__submit {
+    width: 100%;
+  }
+
+  &__success {
+    @include flex-column;
+    @include flex-center;
+    gap: $spacing-md;
+    padding: $spacing-xxl;
+    text-align: center;
+    animation: slide-up 0.4s ease;
+
+    &-icon {
+      font-size: 4rem;
+      color: $neon-lime;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: $text-primary;
+    }
+
+    p {
+      color: $text-secondary;
+    }
+  }
+}
+
+// Auth Pages Styles
+.auth {
+  @include flex-column;
+  @include flex-center;
+  min-height: 100vh;
+  padding: $spacing-xl;
+
+  &__container {
+    @include card-base;
+    width: 100%;
+    max-width: 360px;
+    padding: $spacing-xl;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: $spacing-sm;
+
+      span {
+        color: $neon-cyan;
+      }
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 0.9rem;
+    }
+  }
+
+  &__form {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__input-group {
+    @include flex-column;
+    gap: $spacing-xs;
+
+    label {
+      font-size: 0.85rem;
+      color: $text-secondary;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: $spacing-md;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: $radius-md;
+      color: $text-primary;
+      font-size: 1rem;
+      transition: all $transition-normal;
+
+      &:focus {
+        outline: none;
+        border-color: $neon-cyan;
+        box-shadow: 0 0 0 2px rgba($neon-cyan, 0.2);
+      }
+
+      &::placeholder {
+        color: $text-muted;
+      }
+    }
+  }
+
+  &__error {
+    background: rgba($neon-red, 0.1);
+    border: 1px solid rgba($neon-red, 0.3);
+    color: $neon-red;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: $spacing-sm;
+  }
+
+  &__footer {
+    text-align: center;
+    margin-top: $spacing-lg;
+    color: $text-secondary;
+    font-size: 0.9rem;
+
+    a {
+      color: $neon-cyan;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Loading Spinner
+.loading {
+  @include flex-center;
+  padding: $spacing-xxl;
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba($neon-cyan, 0.2);
+    border-top-color: $neon-cyan;
+    border-radius: $radius-full;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+// Toast / Notification
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 400px;
+  width: calc(100% - $spacing-xl * 2);
+  padding: $spacing-md $spacing-lg;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  z-index: $z-toast;
+  animation: slide-up 0.3s ease;
+
+  &--success {
+    background: rgba($neon-lime, 0.15);
+    border: 1px solid rgba($neon-lime, 0.3);
+    color: $neon-lime;
+  }
+
+  &--error {
+    background: rgba($neon-red, 0.15);
+    border: 1px solid rgba($neon-red, 0.3);
+    color: $neon-red;
+  }
+}

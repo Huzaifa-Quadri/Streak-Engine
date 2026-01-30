@@ -1,0 +1,103 @@
+// Utility Mixins
+@use "./variables" as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin glassmorphism {
+  background: rgba(18, 18, 26, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@mixin neon-glow($color) {
+  box-shadow:
+    0 0 10px rgba($color, 0.3),
+    0 0 20px rgba($color, 0.2),
+    0 0 40px rgba($color, 0.1);
+}
+
+@mixin text-glow($color) {
+  text-shadow:
+    0 0 10px rgba($color, 0.5),
+    0 0 20px rgba($color, 0.3),
+    0 0 40px rgba($color, 0.1);
+}
+
+@mixin button-base {
+  @include flex-center;
+  padding: $spacing-md $spacing-lg;
+  border: none;
+  border-radius: $radius-md;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-normal;
+  gap: $spacing-sm;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin card-base {
+  @include glassmorphism;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  transition: all $transition-normal;
+
+  &:hover {
+    background: rgba(26, 26, 37, 0.8);
+    transform: translateY(-2px);
+  }
+}
+
+@mixin scrollbar-dark {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-darker;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $text-muted;
+    border-radius: 3px;
+
+    &:hover {
+      background: $text-secondary;
+    }
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == mobile {
+    @media (max-width: $mobile) {
+      @content;
+    }
+  } @else if $breakpoint == tablet {
+    @media (max-width: $tablet) {
+      @content;
+    }
+  } @else if $breakpoint == desktop {
+    @media (max-width: $desktop) {
+      @content;
+    }
+  }
+}

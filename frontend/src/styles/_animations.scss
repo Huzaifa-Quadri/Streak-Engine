@@ -1,0 +1,198 @@
+// Animation Keyframes
+@use "./variables" as *;
+
+// Breathing glow effect
+@keyframes breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba($neon-cyan, 0.3),
+      0 0 40px rgba($neon-cyan, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba($neon-cyan, 0.5),
+      0 0 60px rgba($neon-cyan, 0.2);
+    transform: scale(1.02);
+  }
+}
+
+// Pulse animation for buttons
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Glow pulse for text
+@keyframes glow-pulse {
+  0%,
+  100% {
+    text-shadow:
+      0 0 10px rgba($neon-cyan, 0.5),
+      0 0 20px rgba($neon-cyan, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 20px rgba($neon-cyan, 0.8),
+      0 0 40px rgba($neon-cyan, 0.5),
+      0 0 60px rgba($neon-cyan, 0.3);
+  }
+}
+
+// Slide up animation for pages
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Slide in from right
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Fade in
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Shake animation for reset/danger buttons
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+// Spin animation
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Float animation
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Badge glow animation
+@keyframes badge-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px currentColor);
+  }
+}
+
+// Counter tick animation
+@keyframes tick {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Utility classes for animations
+.animate-slide-up {
+  animation: slide-up 0.5s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+// Gradient shift for flashy text
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// Text glow pulse for badge title
+@keyframes text-glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba($neon-cyan, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba($neon-cyan, 0.8))
+      drop-shadow(0 0 30px rgba($neon-magenta, 0.4));
+  }
+}
