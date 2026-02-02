@@ -26,6 +26,7 @@ app.use(cookieParser());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/streak", require("./routes/streak"));
 app.use("/api/journal", require("./routes/journal"));
+app.use("/api/videos", require("./routes/videos"));
 
 // Health check route
 app.get("/api/health", (req, res) => {
