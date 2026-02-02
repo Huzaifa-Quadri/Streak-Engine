@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../hooks/useAuth";
 import StreakBadge from "../components/StreakBadge";
+import RelapseModal from "../components/RelapseModal";
 import { IoPlayCircle, IoRefreshCircle } from "react-icons/io5";
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
   const [totalHours, setTotalHours] = useState(0);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [showRelapseModal, setShowRelapseModal] = useState(false);
 
   // Calculate elapsed time from streak start
   useEffect(() => {
@@ -84,17 +86,10 @@ const Home = () => {
   };
 
   const handleResetStreak = async () => {
-    if (
-      !window.confirm(
-        "Are you sure you want to reset your streak? This action cannot be undone.",
-      )
-    ) {
-      return;
-    }
-
     setLoading(true);
     const result = await resetStreak();
     setLoading(false);
+    setShowRelapseModal(false);
 
     if (result.success) {
       showToast(result.message, "success");
@@ -134,7 +129,7 @@ const Home = () => {
         ) : (
           <button
             className="btn btn--danger btn--large"
-            onClick={handleResetStreak}
+            onClick={() => setShowRelapseModal(true)}
             disabled={loading}
           >
             <IoRefreshCircle size={24} />
@@ -142,6 +137,13 @@ const Home = () => {
           </button>
         )}
       </div>
+
+      <RelapseModal
+        isOpen={showRelapseModal}
+        onConfirm={handleResetStreak}
+        onCancel={() => setShowRelapseModal(false)}
+        loading={loading}
+      />
 
       {toast && (
         <div className={`toast toast--${toast.type}`}>{toast.message}</div>
