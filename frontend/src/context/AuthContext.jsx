@@ -20,7 +20,8 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
       }
     } catch (err) {
-      // Not logged in - that's okay
+      // Not logged in - clear any stale token
+      localStorage.removeItem("token");
       setUser(null);
     } finally {
       setLoading(false);
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const response = await api.post("/auth/register", { username, password });
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         setUser(response.data.user);
         return { success: true };
       }
@@ -47,6 +49,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const response = await api.post("/auth/login", { username, password });
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         setUser(response.data.user);
         return { success: true };
       }
@@ -60,8 +63,12 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await api.post("/auth/logout");
+      localStorage.removeItem("token");
       setUser(null);
     } catch (err) {
+      // Still clear local state even if API call fails
+      localStorage.removeItem("token");
+      setUser(null);
       console.error("Logout error:", err);
     }
   };

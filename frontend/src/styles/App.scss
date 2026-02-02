@@ -387,6 +387,12 @@ body {
   @include flex-between;
   align-items: flex-start;
   width: 100%;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+
+  .page__header {
+    margin-bottom: 0;
+  }
 }
 
 // Modal Styles
@@ -833,5 +839,113 @@ body {
     background: rgba($neon-red, 0.15);
     border: 1px solid rgba($neon-red, 0.3);
     color: $neon-red;
+  }
+}
+
+// Logout Button - Beautiful Neon Style
+.logout-btn {
+  @include flex-center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba($neon-magenta, 0.3);
+  border-radius: $radius-md;
+  color: $neon-magenta;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  // Icon styling
+  svg {
+    font-size: 1.1rem;
+    transition: transform $transition-normal;
+  }
+
+  // Text styling
+  span {
+    transition: transform $transition-normal;
+  }
+
+  // Glow effect layer
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba($neon-magenta, 0),
+      rgba($neon-magenta, 0.1)
+    );
+    opacity: 0;
+    transition: opacity $transition-normal;
+  }
+
+  // Animated border glow
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba($neon-magenta, 0.5),
+      transparent
+    );
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity $transition-normal;
+  }
+
+  // Hover state
+  &:hover {
+    background: rgba($neon-magenta, 0.15);
+    border-color: rgba($neon-magenta, 0.6);
+    color: $text-primary;
+    box-shadow:
+      0 0 20px rgba($neon-magenta, 0.3),
+      inset 0 0 15px rgba($neon-magenta, 0.1);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
+
+    &::after {
+      opacity: 1;
+      animation: border-glow 2s linear infinite;
+    }
+
+    svg {
+      transform: translateX(2px) rotate(-10deg);
+    }
+  }
+
+  // Active/pressed state
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 0 10px rgba($neon-magenta, 0.4);
+  }
+
+  // Focus state for accessibility
+  &:focus {
+    outline: none;
+    box-shadow:
+      0 0 0 2px rgba($neon-magenta, 0.3),
+      0 0 20px rgba($neon-magenta, 0.2);
+  }
+}
+
+// Border glow animation
+@keyframes border-glow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

@@ -8,9 +8,14 @@ const api = axios.create({
   },
 });
 
-// Request interceptor for debugging
+// Request interceptor to attach token and debug
 api.interceptors.request.use(
   (config) => {
+    // Add token from localStorage if available
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     console.log(
       `📤 API Request: ${config.method?.toUpperCase()} ${config.url}`,
     );

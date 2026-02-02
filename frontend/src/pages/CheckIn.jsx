@@ -7,10 +7,11 @@ import {
   IoFlame,
   IoRemove,
   IoWarning,
+  IoLogOutOutline,
 } from "react-icons/io5";
 
 const CheckIn = () => {
-  const { addJournal } = useAuth();
+  const { addJournal, logout } = useAuth();
   const [quote, setQuote] = useState(getRandomQuote());
   const [selectedMood, setSelectedMood] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -78,11 +79,17 @@ const CheckIn = () => {
 
   return (
     <div className="page checkin">
-      <div className="page__header">
-        <h1>
-          Daily <span>Check-In</span>
-        </h1>
-        <p>Take a moment to reflect on your journey</p>
+      <div className="page__header-row">
+        <div className="page__header">
+          <h1>
+            Daily <span>Check-In</span>
+          </h1>
+          <p>Take a moment to reflect on your journey</p>
+        </div>
+        <button className="logout-btn" onClick={logout} title="Logout">
+          <IoLogOutOutline />
+          <span>Logout</span>
+        </button>
       </div>
 
       <div className="checkin__quote">
