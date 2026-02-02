@@ -318,30 +318,80 @@ body {
 
   &__card {
     @include card-base;
-    @include flex-between;
+    display: flex;
+    align-items: center;
+    gap: $spacing-lg;
     animation: slide-in-right 0.4s ease;
     animation-delay: calc(var(--index) * 0.1s);
     animation-fill-mode: backwards;
 
+    &-badge {
+      flex-shrink: 0;
+      width: 75px;
+      height: 75px;
+      min-width: 75px;
+      min-height: 75px;
+      max-width: 75px;
+      max-height: 75px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(
+        135deg,
+        $neon-orange,
+        $neon-red,
+        $neon-orange
+      );
+      background-size: 200% 200%;
+      animation: badge-glow 3s ease infinite;
+      box-shadow:
+        0 0 15px rgba($neon-orange, 0.3),
+        0 0 30px rgba($neon-red, 0.2);
+
+      &-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+        background: $bg-darker;
+      }
+
+      &-fallback {
+        width: 100%;
+        height: 100%;
+        @include flex-center;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, $bg-darker, $bg-dark);
+        border-radius: 50%;
+      }
+    }
+
     &-info {
       @include flex-column;
       gap: $spacing-xs;
+      flex: 1;
     }
 
-    &-date {
-      font-size: 0.85rem;
-      color: $text-muted;
+    &-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $text-primary;
     }
 
     &-duration {
       font-family: $font-mono;
-      font-size: 1.25rem;
+      font-size: 1rem;
       font-weight: 600;
       color: $neon-lime;
     }
 
-    &-badge {
-      font-size: 2rem;
+    &-date {
+      font-size: 0.8rem;
+      color: $text-muted;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -1179,5 +1229,27 @@ body {
   }
   50% {
     box-shadow: 0 0 0 15px rgba($neon-orange, 0);
+  }
+}
+
+// Badge gradient glow animation for history cards
+@keyframes badge-glow {
+  0% {
+    background-position: 0% 50%;
+    box-shadow:
+      0 0 15px rgba($neon-orange, 0.3),
+      0 0 30px rgba($neon-red, 0.2);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow:
+      0 0 20px rgba($neon-red, 0.4),
+      0 0 40px rgba($neon-orange, 0.3);
+  }
+  100% {
+    background-position: 0% 50%;
+    box-shadow:
+      0 0 15px rgba($neon-orange, 0.3),
+      0 0 30px rgba($neon-red, 0.2);
   }
 }

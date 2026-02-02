@@ -1,11 +1,43 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { getBadgeInfo } from "../components/StreakBadge";
 import {
   IoTimeOutline,
   IoTrophyOutline,
   IoTrashOutline,
   IoClose,
 } from "react-icons/io5";
+
+// Supported image extensions to try
+const EXTENSIONS = ["png", "jpg", "jpeg", "svg", "webp"];
+
+// History Badge component - shows badge image with fallback
+const HistoryBadge = ({ hours }) => {
+  const [extensionIndex, setExtensionIndex] = useState(0);
+  const [showFallback, setShowFallback] = useState(false);
+  const badge = getBadgeInfo(hours);
+
+  const handleError = () => {
+    if (extensionIndex < EXTENSIONS.length - 1) {
+      setExtensionIndex(extensionIndex + 1);
+    } else {
+      setShowFallback(true);
+    }
+  };
+
+  if (showFallback) {
+    return <div className="history__card-badge-fallback">🏆</div>;
+  }
+
+  return (
+    <img
+      src={`/badges/${badge.image}.${EXTENSIONS[extensionIndex]}`}
+      alt={badge.label}
+      onError={handleError}
+      className="history__card-badge-image"
+    />
+  );
+};
 
 const History = () => {
   const { user, clearHistory } = useAuth();
@@ -37,14 +69,6 @@ const History = () => {
       day: "numeric",
       year: "numeric",
     });
-  };
-
-  // Get badge emoji based on duration
-  const getBadgeEmoji = (hours) => {
-    if (hours < 24) return "🃏";
-    if (hours < 72) return "👶";
-    if (hours < 168) return "⚔️";
-    return "👑";
   };
 
   const showToast = (message, type = "success") => {
@@ -107,16 +131,19 @@ const History = () => {
               style={{ "--index": index }}
             >
               <div className="history__card-info">
-                <div className="history__card-date">
-                  <IoTimeOutline style={{ marginRight: "4px" }} />
-                  {formatDate(streak.startDate)} - {formatDate(streak.endDate)}
+                <div className="history__card-label">
+                  {getBadgeInfo(streak.durationHours).label}
                 </div>
                 <div className="history__card-duration">
                   {formatDuration(streak.durationHours)}
                 </div>
+                <div className="history__card-date">
+                  <IoTimeOutline style={{ marginRight: "4px" }} />
+                  {formatDate(streak.startDate)} - {formatDate(streak.endDate)}
+                </div>
               </div>
               <div className="history__card-badge">
-                {getBadgeEmoji(streak.durationHours)}
+                <HistoryBadge hours={streak.durationHours} />
               </div>
             </div>
           ))}
