@@ -10,6 +10,7 @@ import CheckIn from "./pages/CheckIn";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Competition from "./pages/Competition";
+import Loader from "./components/Loader";
 import "./styles/App.scss";
 
 // Protected Route Component
@@ -17,11 +18,7 @@ const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="loading">
-        <div className="loading__spinner"></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!user) {
@@ -36,11 +33,7 @@ const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="loading">
-        <div className="loading__spinner"></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (user) {

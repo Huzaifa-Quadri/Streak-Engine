@@ -1628,3 +1628,127 @@ body {
     }
   }
 }
+
+// Custom Loader Styles
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background: $bg-dark;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.loader {
+  width: 100px;
+  height: 80px;
+  border: 5px solid $neon-cyan;
+  padding: 0 10px;
+  box-sizing: border-box;
+  background:
+    linear-gradient($bg-darker 0 0) 0 0/10px 30px,
+    linear-gradient($bg-darker 0 0) 100% 0/10px 30px,
+    radial-gradient(farthest-side, $bg-darker 90%, #0000) 0 5px/10px 10px
+      content-box,
+    $neon-cyan;
+  background-repeat: no-repeat;
+  animation: l3 2s infinite linear;
+  box-shadow: 0 0 20px rgba($neon-cyan, 0.4);
+}
+
+@keyframes l3 {
+  25% {
+    background-position:
+      0 0,
+      100% 100%,
+      100% calc(100% - 5px);
+  }
+  50% {
+    background-position:
+      0 100%,
+      100% 100%,
+      0 calc(100% - 5px);
+  }
+  75% {
+    background-position:
+      0 100%,
+      100% 0,
+      100% 5px;
+  }
+}
+
+// Competition Specific Loader
+.competition-loader {
+  width: 100px;
+  height: 60px;
+  outline: 3px solid $neon-cyan;
+  background:
+    radial-gradient(farthest-side, $neon-red 90%, #0000) 0 0/12px 12px no-repeat,
+    radial-gradient(farthest-side, #ffd700 90%, #0000) 0 0/12px 12px no-repeat,
+    linear-gradient($neon-cyan 0 0) 50%/14px 100% no-repeat,
+    conic-gradient(from 90deg at 14px 14px, #0000 90deg, $neon-cyan 0),
+    conic-gradient(from -90deg at 86px 46px, #0000 90deg, $neon-cyan 0);
+  animation: l9 2s infinite;
+  box-shadow: 0 0 20px rgba($neon-cyan, 0.4);
+}
+
+@keyframes l9 {
+  0% {
+    background-position:
+      50% 100%,
+      0 0,
+      50%;
+  }
+  12.5% {
+    background-position:
+      0 100%,
+      50% 0,
+      50%;
+  }
+  25% {
+    background-position:
+      0 0,
+      50% 100%,
+      50%;
+  }
+  37.5% {
+    background-position:
+      50% 0,
+      100% 100%,
+      50%;
+  }
+  50% {
+    background-position:
+      50% 100%,
+      100% 0,
+      50%;
+  }
+  62.5% {
+    background-position:
+      100% 100%,
+      50% 0,
+      50%;
+  }
+  75% {
+    background-position:
+      100% 0,
+      50% 100%,
+      50%;
+  }
+  82.5% {
+    background-position:
+      50% 0,
+      0 100%,
+      50%;
+  }
+  100% {
+    background-position:
+      50% 100%,
+      0 0,
+      50%;
+  }
+}

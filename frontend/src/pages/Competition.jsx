@@ -12,6 +12,7 @@ import {
 import api from "../api/axios";
 import { useAuth } from "../hooks/useAuth";
 import { getBadgeInfo } from "../components/StreakBadge";
+import CompetitionLoader from "../components/CompetitionLoader";
 
 const Competition = () => {
   const { user } = useAuth();
@@ -135,7 +136,7 @@ const Competition = () => {
   };
 
   if (loading) {
-    return <div className="page competition loading">Loading...</div>;
+    return <CompetitionLoader />;
   }
 
   // LOBBY VIEW
