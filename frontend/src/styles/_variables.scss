@@ -13,6 +13,7 @@ $neon-magenta: #ff00aa;
 $neon-lime: #00ff88;
 $neon-red: #ff3355;
 $neon-purple: #9945ff;
+$neon-blue: #2f27ce;
 $neon-orange: #ff6600;
 
 // Darkened versions (pre-calculated to avoid darken() deprecation)
@@ -46,6 +47,7 @@ $spacing-xl: 2rem;
 $spacing-xxl: 3rem;
 
 // Border Radius
+$radius-xs: 4px;
 $radius-sm: 8px;
 $radius-md: 12px;
 $radius-lg: 16px;

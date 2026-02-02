@@ -42,6 +42,12 @@ const UserSchema = new mongoose.Schema(
         quote: String,
       },
     ],
+    // Competition Room
+    activeRoom: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room",
+      default: null,
+    },
   },
   {
     timestamps: true,

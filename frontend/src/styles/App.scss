@@ -1253,3 +1253,378 @@ body {
       0 0 30px rgba($neon-red, 0.2);
   }
 }
+
+// Competition Page Styles
+.competition {
+  &__lobby {
+    @include flex-column;
+    gap: $spacing-lg;
+    animation: fade-in 0.3s ease-out;
+  }
+
+  &__selection {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    width: 100%;
+    margin-top: $spacing-md;
+    flex: 1; // Fill available space
+
+    &-card {
+      @include card-base;
+      @include flex-column;
+      align-items: center;
+      justify-content: center;
+      padding: $spacing-xl $spacing-md;
+      gap: $spacing-md;
+      text-align: center;
+      cursor: pointer;
+      transition: all $transition-normal;
+      border: 1px solid rgba($text-muted, 0.2);
+      flex: 1; // Expand to fill container
+      min-height: 200px;
+      position: relative;
+      overflow: hidden;
+
+      .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        @include flex-center;
+        font-size: 2.5rem;
+        background: rgba($bg-card-hover, 0.5);
+        transition: all $transition-normal;
+        margin-bottom: $spacing-sm;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      p {
+        font-size: 1rem;
+        color: $text-muted;
+        margin: 0;
+        line-height: 1.4;
+        max-width: 80%;
+      }
+
+      // Hover Effects
+      &:hover {
+        transform: scale(1.02);
+        background: rgba($bg-card-hover, 0.8);
+
+        .icon-wrapper {
+          transform: scale(1.1) rotate(5deg);
+        }
+      }
+
+      // Variant: Create
+      &.create {
+        border-color: rgba($neon-purple, 0.2);
+        &:hover {
+          border-color: rgba($neon-purple, 0.6);
+          box-shadow: 0 10px 40px rgba($neon-purple, 0.2);
+
+          .icon-wrapper {
+            background: rgba($neon-purple, 0.2);
+            color: $neon-purple;
+            box-shadow: 0 0 30px rgba($neon-purple, 0.3);
+          }
+
+          h3 {
+            color: $neon-purple;
+          }
+        }
+      }
+
+      // Variant: Join
+      &.join {
+        border-color: rgba($neon-cyan, 0.2);
+        &:hover {
+          border-color: rgba($neon-cyan, 0.6);
+          box-shadow: 0 10px 40px rgba($neon-cyan, 0.2);
+
+          .icon-wrapper {
+            background: rgba($neon-cyan, 0.2);
+            color: $neon-cyan;
+            box-shadow: 0 0 30px rgba($neon-cyan, 0.3);
+          }
+
+          h3 {
+            color: $neon-cyan;
+          }
+        }
+      }
+
+      // Active touch state
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  &__error {
+    background: rgba($neon-red, 0.1);
+    border: 1px solid rgba($neon-red, 0.3);
+    color: $neon-red;
+    padding: $spacing-md;
+    border-radius: $radius-md;
+    @include flex-center;
+    gap: $spacing-sm;
+    font-size: 0.9rem;
+  }
+
+  &__card {
+    @include card-base;
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: $spacing-xl;
+
+    &-header {
+      display: grid;
+      grid-template-columns: auto 1fr auto; // Back btn, Title, Empty spacer
+      align-items: center;
+      margin-bottom: $spacing-xl;
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        text-align: center;
+        grid-column: 2;
+      }
+
+      .btn-back {
+        grid-column: 1;
+        background: rgba($bg-card-hover, 0.5);
+        border: 1px solid rgba($text-muted, 0.2);
+        color: $text-muted;
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: $spacing-xs $spacing-md;
+        border-radius: $radius-full;
+        transition: all $transition-fast;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        &:hover {
+          color: $text-primary;
+          background: rgba($text-primary, 0.1);
+          border-color: rgba($text-primary, 0.3);
+          transform: translateX(-2px);
+        }
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-lg;
+
+      .form-group {
+        .input {
+          width: 100%;
+          padding: $spacing-md $spacing-lg;
+          background: rgba($bg-darker, 0.6);
+          border: 2px solid rgba($text-muted, 0.1);
+          border-radius: $radius-lg;
+          font-size: 1.1rem;
+          color: $text-primary;
+          transition: all $transition-normal;
+          text-align: center;
+          font-weight: 500;
+
+          &::placeholder {
+            color: rgba($text-muted, 0.5);
+          }
+
+          &:focus {
+            outline: none;
+            border-color: $neon-cyan;
+            background: rgba($bg-darker, 0.9);
+            box-shadow: 0 0 0 4px rgba($neon-cyan, 0.1);
+            transform: scale(1.02);
+          }
+        }
+      }
+
+      .btn {
+        padding: $spacing-md;
+        font-size: 1.1rem;
+        border-radius: $radius-lg;
+      }
+    }
+  }
+
+  &__divider {
+    @include flex-center;
+    position: relative;
+    padding: $spacing-sm 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba($text-muted, 0.2);
+    }
+
+    span {
+      background: $bg-dark;
+      padding: 0 $spacing-md;
+      color: $text-muted;
+      font-size: 0.85rem;
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-lg;
+    background: rgba($bg-card, 0.5);
+    padding: $spacing-md;
+    border-radius: $radius-lg;
+    border: 1px solid rgba($neon-cyan, 0.2);
+  }
+
+  &__room-info {
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 2px;
+    }
+  }
+
+  &__code {
+    font-size: 0.9rem;
+    color: $text-muted;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    span {
+      font-family: $font-mono;
+      color: $neon-cyan;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    &:hover {
+      color: $text-primary;
+    }
+  }
+
+  &__leaderboard {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+}
+
+.leaderboard {
+  &__list {
+    @include flex-column;
+    gap: $spacing-sm;
+  }
+
+  &__card {
+    @include card-base;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-md;
+    transition: transform $transition-fast;
+
+    &.active {
+      border-color: rgba($neon-cyan, 0.5);
+      background: rgba($neon-cyan, 0.05);
+      box-shadow: 0 0 15px rgba($neon-cyan, 0.1);
+    }
+  }
+
+  &__rank {
+    font-size: 1.1rem;
+    font-weight: 700;
+    width: 30px;
+    text-align: center;
+    color: $text-muted;
+  }
+
+  &__user {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: $bg-dark;
+
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      @include flex-center;
+      background: linear-gradient(135deg, $neon-purple, $neon-blue);
+      color: white;
+      font-weight: 600;
+    }
+  }
+
+  &__details {
+    @include flex-column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .host-tag {
+      font-size: 0.65rem;
+      background: rgba($neon-lime, 0.2);
+      color: $neon-lime;
+      padding: 1px 6px;
+      border-radius: $radius-xs;
+      border: 1px solid rgba($neon-lime, 0.3);
+    }
+  }
+
+  &__badge-label {
+    font-size: 0.75rem;
+    color: $text-muted;
+  }
+
+  &__score {
+    @include flex-column;
+    align-items: flex-end;
+
+    .score-value {
+      font-family: $font-mono;
+      color: $neon-lime;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .score-label {
+      font-size: 0.7rem;
+      color: $text-muted;
+      text-transform: uppercase;
+    }
+  }
+}

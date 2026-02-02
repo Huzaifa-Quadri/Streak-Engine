@@ -9,6 +9,8 @@ import {
   IoAlertCircle,
   IoJournalOutline,
   IoJournal,
+  IoTrophyOutline,
+  IoTrophy,
 } from "react-icons/io5";
 
 const BottomNav = () => {
@@ -36,6 +38,12 @@ const BottomNav = () => {
       label: "Check-In",
       icon: IoJournalOutline,
       activeIcon: IoJournal,
+    },
+    {
+      path: "/competition",
+      label: "Arena",
+      icon: IoTrophyOutline,
+      activeIcon: IoTrophy,
     },
   ];
 

@@ -9,6 +9,7 @@ import Emergency from "./pages/Emergency";
 import CheckIn from "./pages/CheckIn";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Competition from "./pages/Competition";
 import "./styles/App.scss";
 
 // Protected Route Component
@@ -116,6 +117,16 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <AppLayout>
               <CheckIn />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/competition"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Competition />
             </AppLayout>
           </ProtectedRoute>
         }
