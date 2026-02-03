@@ -13,6 +13,7 @@ import api from "../api/axios";
 import { useAuth } from "../hooks/useAuth";
 import { getBadgeInfo } from "../components/StreakBadge";
 import CompetitionLoader from "../components/CompetitionLoader";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const Competition = () => {
   const { user } = useAuth();
@@ -27,6 +28,15 @@ const Competition = () => {
   const [createName, setCreateName] = useState("");
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Modal State
+  const [showModal, setShowModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    title: "",
+    message: "",
+    confirmText: "Confirm",
+    variant: "danger",
+  });
 
   // Fetch current room status
   const fetchRoomStatus = useCallback(async () => {
@@ -96,16 +106,31 @@ const Competition = () => {
     }
   };
 
-  const handleLeaveRoom = async () => {
-    if (
-      !window.confirm(
-        roomData?.room.host === user._id
-          ? "⚠️ DESTROY ROOM? ⚠️\n\nThis will kick all members and delete the room immediately. Are you sure?"
-          : "Are you sure you want to surrender and leave the battle?",
-      )
-    )
-      return;
+  const handleLeaveRoom = () => {
+    // Fix: Auth context provides user.id, not user._id
+    const isHost = roomData?.room.host === user.id;
 
+    if (isHost) {
+      setModalConfig({
+        title: "End Room?",
+        message:
+          "This will kick all members and delete the room immediately. This action cannot be undone.",
+        confirmText: "End Room",
+        variant: "danger",
+      });
+    } else {
+      setModalConfig({
+        title: "Surrender Battle?",
+        message:
+          "Are you sure you want to surrender and leave the battle? Your progress in this room will be lost.",
+        confirmText: "Surrender",
+        variant: "warning",
+      });
+    }
+    setShowModal(true);
+  };
+
+  const confirmLeaveRoom = async () => {
     setActionLoading(true);
     try {
       const response = await api.post("/competition/leave");
@@ -257,7 +282,7 @@ const Competition = () => {
 
   // LEADERBOARD VIEW
   const { room, leaderboard } = roomData;
-  const isHost = room.host === user._id;
+  const isHost = room.host === user.id; // Fix: Check user.id
 
   return (
     <div className="page competition">
@@ -277,7 +302,7 @@ const Competition = () => {
           onClick={handleLeaveRoom}
           disabled={actionLoading}
         >
-          <IoExitOutline /> {isHost ? "Destroy Room" : "Surrender"}
+          <IoExitOutline /> {isHost ? "End Room" : "Surrender"}
         </button>
       </div>
 
@@ -297,7 +322,6 @@ const Competition = () => {
 
                 <div className="leaderboard__user">
                   <div className="leaderboard__avatar">
-                    {/* Placeholder avatar or real one if available */}
                     <div className="avatar-placeholder">
                       {member.username.charAt(0).toUpperCase()}
                     </div>
@@ -324,6 +348,16 @@ const Competition = () => {
           })}
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={confirmLeaveRoom}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        confirmText={modalConfig.confirmText}
+        variant={modalConfig.variant}
+      />
     </div>
   );
 };

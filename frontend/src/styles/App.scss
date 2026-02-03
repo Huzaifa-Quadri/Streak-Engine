@@ -103,35 +103,104 @@ body {
     @include flex-column;
     @include flex-center;
     gap: $spacing-xs;
-    padding: $spacing-sm $spacing-md;
+    padding: $spacing-sm; // Reduced padding for small screens
     color: $text-muted;
     text-decoration: none;
     transition: all $transition-normal;
     border-radius: $radius-md;
+    flex: 1; // Ensure equal width
+    // Specific colors for inactive state (Colorful Outlines)
+    &.nav-item-home {
+      color: rgba($neon-cyan, 0.6);
+      &:hover {
+        color: rgba($neon-cyan, 0.9);
+      }
+    }
 
-    &:hover {
-      color: $text-secondary;
+    &.nav-item-history {
+      color: rgba($neon-magenta, 0.6);
+      &:hover {
+        color: rgba($neon-magenta, 0.9);
+      }
+    }
+
+    &.nav-item-panic {
+      color: rgba($neon-red, 0.6);
+      &:hover {
+        color: rgba($neon-red, 0.9);
+      }
+    }
+
+    &.nav-item-arena {
+      color: rgba(255, 215, 0, 0.6); // Gold
+      &:hover {
+        color: rgba(255, 215, 0, 0.9);
+      }
+    }
+
+    &.nav-item-checkin {
+      color: rgba($neon-lime, 0.6);
+      &:hover {
+        color: rgba($neon-lime, 0.9);
+      }
     }
 
     &.active {
+      // Default fallback
       color: $neon-cyan;
 
-      .bottom-nav__icon {
-        @include text-glow($neon-cyan);
+      &.nav-item-home {
+        color: $neon-cyan;
+        .bottom-nav__icon {
+          @include text-glow($neon-cyan);
+        }
+      }
+
+      &.nav-item-history {
+        color: $neon-magenta;
+        .bottom-nav__icon {
+          @include text-glow($neon-magenta);
+        }
+      }
+
+      &.nav-item-panic {
+        color: $neon-red;
+        .bottom-nav__icon {
+          @include text-glow($neon-red);
+          // Pulse animation for the panic button
+          animation: glow-pulse 1.5s infinite;
+        }
+      }
+
+      &.nav-item-arena {
+        color: #ffd700; // Gold
+        .bottom-nav__icon {
+          text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+      }
+
+      &.nav-item-checkin {
+        color: $neon-lime;
+        .bottom-nav__icon {
+          @include text-glow($neon-lime);
+        }
       }
     }
   }
 
   &__icon {
-    font-size: 1.5rem;
+    font-size: 1.4rem; // Slightly smaller to prevent overcrowding
     transition: all $transition-normal;
   }
 
   &__label {
-    font-size: 0.7rem;
+    font-size: 0.65rem; // Adjusted specific font size
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap; // Prevent wrapping
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -1407,7 +1476,7 @@ body {
         font-size: 0.9rem;
         cursor: pointer;
         padding: $spacing-xs $spacing-md;
-        border-radius: $radius-full;
+        border-radius: $radius-sm;
         transition: all $transition-fast;
         font-weight: 500;
         display: flex;
@@ -1750,5 +1819,97 @@ body {
       50% 100%,
       0 0,
       50%;
+  }
+}
+
+// Confirmation Modal Styles
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.modal-content {
+  background: rgba(20, 20, 25, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: $spacing-xl;
+  border-radius: $radius-lg;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+  &.open {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $text-primary;
+  }
+}
+
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: $spacing-md;
+
+  &.danger {
+    color: $neon-red;
+    filter: drop-shadow(0 0 10px rgba($neon-red, 0.4));
+  }
+
+  &.warning {
+    color: #ffd700;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+  }
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: $spacing-sm;
+  color: $text-primary;
+}
+
+.modal-message {
+  color: $text-secondary;
+  margin-bottom: $spacing-xl;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+
+  button {
+    flex: 1;
   }
 }

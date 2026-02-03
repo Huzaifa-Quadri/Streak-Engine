@@ -5,13 +5,12 @@ import {
   IoHome,
   IoTimeOutline,
   IoTime,
-  IoAlertCircleOutline,
-  IoAlertCircle,
   IoJournalOutline,
   IoJournal,
   IoTrophyOutline,
   IoTrophy,
 } from "react-icons/io5";
+import { RiAlarmWarningLine, RiAlarmWarningFill } from "react-icons/ri";
 
 const BottomNav = () => {
   const navItems = [
@@ -20,30 +19,35 @@ const BottomNav = () => {
       label: "Home",
       icon: IoHomeOutline,
       activeIcon: IoHome,
+      className: "nav-item-home",
     },
     {
       path: "/history",
       label: "History",
       icon: IoTimeOutline,
       activeIcon: IoTime,
+      className: "nav-item-history",
     },
     {
       path: "/emergency",
-      label: "SOS",
-      icon: IoAlertCircleOutline,
-      activeIcon: IoAlertCircle,
-    },
-    {
-      path: "/checkin",
-      label: "Check-In",
-      icon: IoJournalOutline,
-      activeIcon: IoJournal,
+      label: "Panic",
+      icon: RiAlarmWarningLine,
+      activeIcon: RiAlarmWarningFill,
+      className: "nav-item-panic",
     },
     {
       path: "/competition",
       label: "Arena",
       icon: IoTrophyOutline,
       activeIcon: IoTrophy,
+      className: "nav-item-arena",
+    },
+    {
+      path: "/checkin",
+      label: "Check-In",
+      icon: IoJournalOutline,
+      activeIcon: IoJournal,
+      className: "nav-item-checkin",
     },
   ];
 
@@ -55,7 +59,7 @@ const BottomNav = () => {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `bottom-nav__item ${isActive ? "active" : ""}`
+              `bottom-nav__item ${isActive ? "active" : ""} ${item.className}`
             }
           >
             {({ isActive }) => (
