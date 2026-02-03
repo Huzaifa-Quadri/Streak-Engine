@@ -9,7 +9,7 @@
 
 ## 🚀 Live Demo
 
-**[👉 CLICK HERE TO TRY THE APP 👈](https://streak-engine-nofap.onrender.com/)**
+**[👉 CLICK HERE TO TRY THE APP 👈](https://streak-engine-seven.vercel.app/)**
 
 ---
 
