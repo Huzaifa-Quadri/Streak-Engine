@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import React from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
@@ -10,6 +16,7 @@ import CheckIn from "./pages/CheckIn";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Competition from "./pages/Competition";
+import LandingPage from "./pages/LandingPage";
 import Loader from "./components/Loader";
 import "./styles/App.scss";
 
@@ -28,16 +35,20 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// Public Route (redirect to home if already logged in)
+// Public Route (redirect to /app if already logged in)
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return <Loader />;
   }
 
+  // If user is logged in and trying to access public pages (like Landing, Login, Register)
   if (user) {
-    return <Navigate to="/" replace />;
+    // If on landing page (root), redirect to app
+    // If on login/register, redirect to app
+    return <Navigate to="/app" replace />;
   }
 
   return children;
@@ -57,6 +68,16 @@ const AppLayout = ({ children }) => {
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Public Landing Page */}
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <LandingPage />
+          </PublicRoute>
+        }
+      />
+
       {/* Public Routes */}
       <Route
         path="/login"
@@ -75,9 +96,9 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Protected Routes */}
+      {/* Protected Routes - Moved to /app */}
       <Route
-        path="/"
+        path="/app"
         element={
           <ProtectedRoute>
             <AppLayout>

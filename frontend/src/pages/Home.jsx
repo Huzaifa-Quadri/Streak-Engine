@@ -98,8 +98,23 @@ const Home = () => {
     }
   };
 
+  const formatUsername = (name) => {
+    if (!name) return "Warrior";
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   return (
     <div className="page home">
+      <div className="home__welcome">
+        <span className="home__welcome-label">Welcome</span>
+        <h1 className="home__welcome-username">
+          {formatUsername(user?.username || user?.name)}
+        </h1>
+      </div>
+
       <StreakBadge hours={totalHours} />
 
       <div className="home__counter">

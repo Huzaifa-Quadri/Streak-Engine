@@ -213,6 +213,68 @@ body {
   text-align: center;
   padding-top: $spacing-xxl;
 
+  // Welcome Header
+  &__welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: -1rem; // Pull closer to badge
+    z-index: 2;
+
+    &-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+      color: $neon-cyan;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      opacity: 0.8;
+      text-shadow: 0 0 10px rgba($neon-cyan, 0.4);
+    }
+
+    &-username {
+      font-family: "Inter", sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800; // Extra heavy
+      line-height: 1.1;
+
+      // Fire Gradient
+      background: linear-gradient(
+        180deg,
+        #fff700 0%,
+        // Bright Yellow Top
+        #ff8c00 45%,
+        // Orange Middle
+        #ff0000 100% // Red Bottom
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      // Cartoonish Fire Glow & Stroke
+      filter: drop-shadow(0 0 4px rgba(255, 69, 0, 0.8)); // Hard orange glow
+      // Note: text-stroke isn't widely supported standardly but works in WebKit.
+      // Alternatively, use text-shadow to simulate stroke if needed, but drop-shadow is better for transparent text.
+
+      animation: fire-pulse 2s ease-in-out infinite alternate;
+
+      // Ensure words break nicely if super long
+      max-width: 100%;
+      overflow-wrap: break-word;
+    }
+  }
+
+  @keyframes fire-pulse {
+    0% {
+      filter: drop-shadow(0 0 4px rgba(255, 69, 0, 0.6));
+      transform: scale(1);
+    }
+    100% {
+      filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.9));
+      transform: scale(1.02);
+    }
+  }
+
   &__badge {
     position: relative;
     width: 180px;
