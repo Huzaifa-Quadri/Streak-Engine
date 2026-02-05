@@ -5,16 +5,19 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   build: {
-    chunkSizeWarningLimit: 1000, // Increase warning limit to 1000kB since we have heavy 3D assets
     rollupOptions: {
       output: {
         manualChunks: {
           "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-3d": ["three", "@react-three/fiber", "@react-three/drei"],
-          "vendor-anim": ["framer-motion", "gsap"],
+          "vendor-three": ["three"],
+          "vendor-drei": ["@react-three/drei"],
+          "vendor-fiber": ["@react-three/fiber"],
+          "vendor-framer": ["framer-motion"],
+          "vendor-gsap": ["gsap"],
           "vendor-ui": ["react-icons"],
         },
       },
     },
+    chunkSizeWarningLimit: 1600, // Three.js + Drei is naturally heavy, 1.6MB is a safer realistic limit
   },
 });
