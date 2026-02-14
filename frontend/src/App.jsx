@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import React from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import BottomNav from "./components/BottomNav";
@@ -157,6 +158,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <AppRoutes />
+        <SpeedInsights />
       </AuthProvider>
     </BrowserRouter>
   );
