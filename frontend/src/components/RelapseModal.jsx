@@ -59,18 +59,18 @@ const RelapseModal = ({ isOpen, onConfirm, onCancel, loading }) => {
 
         <div className="relapse-modal__actions">
           <button
-            className="relapse-modal__btn relapse-modal__btn--cancel"
-            onClick={onCancel}
-            disabled={loading}
-          >
-            Keep Going 💪
-          </button>
-          <button
             className="relapse-modal__btn relapse-modal__btn--confirm"
             onClick={onConfirm}
             disabled={loading}
           >
             {loading ? "Resetting..." : "Back to Zero"}
+          </button>
+          <button
+            className="relapse-modal__btn relapse-modal__btn--cancel"
+            onClick={onCancel}
+            disabled={loading}
+          >
+            Keep Going 💪
           </button>
         </div>
       </div>

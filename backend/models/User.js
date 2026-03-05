@@ -48,6 +48,14 @@ const UserSchema = new mongoose.Schema(
       ref: "Room",
       default: null,
     },
+    arenasJoined: {
+      type: Number,
+      default: 0,
+    },
+    arenasHosted: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

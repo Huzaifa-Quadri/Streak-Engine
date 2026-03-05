@@ -61,6 +61,8 @@ router.post("/register", async (req, res) => {
         lastCheckIn: user.lastCheckIn,
         streakHistory: user.streakHistory,
         journals: user.journals,
+        arenasJoined: user.arenasJoined,
+        arenasHosted: user.arenasHosted,
       },
     });
   } catch (error) {
@@ -111,6 +113,8 @@ router.post("/login", async (req, res) => {
         lastCheckIn: user.lastCheckIn,
         streakHistory: user.streakHistory,
         journals: user.journals,
+        arenasJoined: user.arenasJoined,
+        arenasHosted: user.arenasHosted,
       },
     });
   } catch (error) {
@@ -148,10 +152,115 @@ router.get("/me", protect, async (req, res) => {
         lastCheckIn: user.lastCheckIn,
         streakHistory: user.streakHistory,
         journals: user.journals,
+        arenasJoined: user.arenasJoined,
+        arenasHosted: user.arenasHosted,
       },
     });
   } catch (error) {
     console.error("Get me error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+// @route   PUT /api/auth/profile
+// @desc    Update user profile (username, password)
+// @access  Private
+router.put("/profile", protect, async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (username) {
+      if (username.length < 3) {
+        return res.status(400).json({
+          success: false,
+          message: "Username must be at least 3 characters",
+        });
+      }
+
+      // Check if username is already taken by someone else
+      const existingUser = await User.findOne({
+        username: username.toLowerCase(),
+      });
+      if (existingUser && existingUser._id.toString() !== user._id.toString()) {
+        return res.status(400).json({
+          success: false,
+          message: "Username already taken",
+        });
+      }
+      user.username = username.toLowerCase();
+    }
+
+    if (password) {
+      if (password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: "Password must be at least 6 characters",
+        });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        currentStreakStart: user.currentStreakStart,
+        lastCheckIn: user.lastCheckIn,
+        streakHistory: user.streakHistory,
+        journals: user.journals,
+        arenasJoined: user.arenasJoined,
+        arenasHosted: user.arenasHosted,
+      },
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+// @route   DELETE /api/auth/account
+// @desc    Delete user account
+// @access  Private
+router.delete("/account", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    // If user is hosting a room, clean that up too (optional enhancement based on logic, but currently let's just delete the user)
+    if (user.activeRoom) {
+      const Room = require("../models/Room");
+      const room = await Room.findById(user.activeRoom);
+      // Simple cleanup: just remove from members list. If it was the host, room stays without host or gets deleted via leave logic.
+      if (room) {
+        room.members = room.members.filter((id) => !id.equals(user._id));
+        await room.save();
+      }
+    }
+
+    await User.findByIdAndDelete(req.user._id);
+
+    res.cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+
+    res.json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete account error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",

@@ -12,7 +12,8 @@ import BottomNav from "./components/BottomNav";
 import Home from "./pages/Home";
 import History from "./pages/History";
 import Emergency from "./pages/Emergency";
-import CheckIn from "./pages/CheckIn";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Competition from "./pages/Competition";
@@ -126,11 +127,21 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="/checkin"
+        path="/profile"
         element={
           <ProtectedRoute>
             <AppLayout>
-              <CheckIn />
+              <Profile />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-profile"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <EditProfile />
             </AppLayout>
           </ProtectedRoute>
         }

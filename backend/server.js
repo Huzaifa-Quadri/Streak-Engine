@@ -15,7 +15,22 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
+      // Normalize: Remove trailing slash from both env var and incoming origin for comparison
+      const normalizedAllowed = allowedOrigin.replace(/\/$/, "");
+      const normalizedOrigin = origin ? origin.replace(/\/$/, "") : "";
+
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (normalizedOrigin === normalizedAllowed) {
+        callback(null, true);
+      } else {
+        console.log("Blocked by CORS:", origin); // Debugging
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true, // Allow cookies
   }),
 );

@@ -136,6 +136,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (data) => {
+    try {
+      const response = await api.put("/auth/profile", data);
+      if (response.data.success) {
+        await refreshUser();
+        return { success: true, message: "Profile updated" };
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to update profile";
+      return { success: false, message };
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      const response = await api.delete("/auth/account");
+      if (response.data.success) {
+        await logout();
+        return { success: true };
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to delete account";
+      return { success: false, message };
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -149,6 +175,8 @@ export const AuthProvider = ({ children }) => {
     resetStreak,
     addJournal,
     clearHistory,
+    updateProfile,
+    deleteAccount,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

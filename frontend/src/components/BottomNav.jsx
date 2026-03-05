@@ -5,10 +5,10 @@ import {
   IoHome,
   IoTimeOutline,
   IoTime,
-  IoJournalOutline,
-  IoJournal,
   IoTrophyOutline,
   IoTrophy,
+  IoPersonOutline,
+  IoPerson,
 } from "react-icons/io5";
 import { RiAlarmWarningLine, RiAlarmWarningFill } from "react-icons/ri";
 
@@ -43,11 +43,11 @@ const BottomNav = () => {
       className: "nav-item-arena",
     },
     {
-      path: "/checkin",
-      label: "Check-In",
-      icon: IoJournalOutline,
-      activeIcon: IoJournal,
-      className: "nav-item-checkin",
+      path: "/profile",
+      label: "Profile",
+      icon: IoPersonOutline,
+      activeIcon: IoPerson,
+      className: "nav-item-profile",
     },
   ];
 

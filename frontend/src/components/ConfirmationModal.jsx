@@ -40,7 +40,7 @@ const ConfirmationModal = ({
         </div>
 
         <h3 className="modal-title">{title}</h3>
-        <p className="modal-message">{message}</p>
+        <div className="modal-message">{message}</div>
 
         <div className="modal-actions">
           <button className="btn btn--ghost" onClick={onClose}>

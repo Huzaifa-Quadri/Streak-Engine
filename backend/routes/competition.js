@@ -55,6 +55,7 @@ router.post("/create", async (req, res) => {
 
     // Update User
     user.activeRoom = room._id;
+    user.arenasHosted += 1;
     await user.save();
 
     res.status(201).json({ success: true, room });
@@ -103,6 +104,7 @@ router.post("/join", async (req, res) => {
 
     // Update User
     user.activeRoom = room._id;
+    user.arenasJoined += 1;
     await user.save();
 
     res.json({ success: true, room });

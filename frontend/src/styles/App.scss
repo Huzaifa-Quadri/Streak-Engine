@@ -138,7 +138,7 @@ body {
       }
     }
 
-    &.nav-item-checkin {
+    &.nav-item-profile {
       color: rgba($neon-lime, 0.6);
       &:hover {
         color: rgba($neon-lime, 0.9);
@@ -179,7 +179,7 @@ body {
         }
       }
 
-      &.nav-item-checkin {
+      &.nav-item-profile {
         color: $neon-lime;
         .bottom-nav__icon {
           @include text-glow($neon-lime);
@@ -1060,7 +1060,7 @@ body {
 // Toast / Notification
 .toast {
   position: fixed;
-  bottom: 90px;
+  bottom: 200px;
   left: 50%;
   transform: translateX(-50%);
   max-width: 400px;
@@ -1074,9 +1074,9 @@ body {
   animation: slide-up 0.3s ease;
 
   &--success {
-    background: rgba($neon-lime, 0.15);
-    border: 1px solid rgba($neon-lime, 0.3);
-    color: $neon-lime;
+    background: rgba($neon-cyan, 0.12);
+    border: 1px solid rgba($neon-cyan, 0.4);
+    color: $neon-cyan;
   }
 
   &--error {
@@ -1973,5 +1973,220 @@ body {
 
   button {
     flex: 1;
+  }
+}
+
+// ============================================
+// Profile Page
+// ============================================
+.profile {
+  gap: $spacing-lg;
+
+  &__stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-md;
+    width: 100%;
+  }
+
+  &__stat-box {
+    @include card-base;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-lg $spacing-md;
+    text-align: center;
+    gap: $spacing-sm;
+    border: 1px solid rgba($neon-cyan, 0.15);
+    transition: all $transition-normal;
+
+    &:hover {
+      border-color: rgba($neon-cyan, 0.35);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__stat-icon-wrapper {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+  }
+
+  &__crown-icon {
+    font-size: 1.1rem;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.7));
+  }
+
+  &__stat-content {
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: $neon-cyan;
+      font-family: $font-mono;
+      @include text-glow($neon-cyan);
+    }
+
+    p {
+      font-size: 0.75rem;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.25rem;
+    }
+  }
+
+  &__arena-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-md;
+    width: 100%;
+  }
+
+  &__arena-stat {
+    @include card-base;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    padding: $spacing-md;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    transition: all $transition-normal;
+    text-align: center;
+
+    &:hover {
+      border-color: rgba(255, 215, 0, 0.35);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__arena-icon {
+    font-size: 1.5rem;
+    color: #ffd700;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5));
+    flex-shrink: 0;
+  }
+
+  &__arena-text {
+    h4 {
+      font-size: 0.7rem;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.15rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: $font-mono;
+      color: #ffd700;
+    }
+  }
+
+  &__medal-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    object-fit: contain;
+    filter: drop-shadow(0 0 6px rgba(255, 180, 0, 0.7));
+  }
+
+  &__edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-lg;
+    font-size: 0.95rem;
+  }
+}
+
+// ============================================
+// Edit Profile Page
+// ============================================
+.edit-profile {
+  gap: $spacing-lg;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: $spacing-md;
+    flex: 1;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__danger-zone {
+    margin-top: auto;
+    padding-top: $spacing-lg;
+    border-top: 1px solid rgba($neon-red, 0.2);
+  }
+}
+
+// Input group style (reusable)
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  text-align: left;
+
+  label {
+    font-size: 0.8rem;
+    color: $text-secondary;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    width: 100%;
+    padding: $spacing-md $spacing-lg;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $radius-md;
+    color: $text-primary;
+    font-size: 1rem;
+    font-family: $font-sans;
+    transition: all $transition-normal;
+    outline: none;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:focus {
+      border-color: rgba($neon-cyan, 0.5);
+      background: rgba($neon-cyan, 0.03);
+      box-shadow: 0 0 0 2px rgba($neon-cyan, 0.1);
+    }
+  }
+}
+
+// Icon-only button
+.btn--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: $text-secondary;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all $transition-normal;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: $text-primary;
   }
 }
