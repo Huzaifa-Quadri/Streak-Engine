@@ -5,7 +5,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import React from "react";
+import React, { Suspense } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import BottomNav from "./components/BottomNav";
@@ -17,9 +17,11 @@ import EditProfile from "./pages/EditProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Competition from "./pages/Competition";
-import LandingPage from "./pages/LandingPage";
 import Loader from "./components/Loader";
 import "./styles/App.scss";
+
+// Lazy-load LandingPage — three.js/gsap/framer-motion only downloaded when needed
+const LandingPage = React.lazy(() => import("./pages/LandingPage"));
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -69,12 +71,14 @@ const AppLayout = ({ children }) => {
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Landing Page */}
+      {/* Public Landing Page — lazy loaded */}
       <Route
         path="/"
         element={
           <PublicRoute>
-            <LandingPage />
+            <Suspense fallback={<Loader />}>
+              <LandingPage />
+            </Suspense>
           </PublicRoute>
         }
       />
@@ -158,7 +162,7 @@ const AppRoutes = () => {
       />
 
       {/* Catch-all redirect */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };

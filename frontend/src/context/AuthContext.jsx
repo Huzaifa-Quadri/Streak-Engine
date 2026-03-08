@@ -65,10 +65,12 @@ export const AuthProvider = ({ children }) => {
       await api.post("/auth/logout");
       localStorage.removeItem("token");
       setUser(null);
+      // Redirect to login page (avoids loading heavy landing page)
+      window.location.href = "/login";
     } catch (err) {
-      // Still clear local state even if API call fails
       localStorage.removeItem("token");
       setUser(null);
+      window.location.href = "/login";
       console.error("Logout error:", err);
     }
   };

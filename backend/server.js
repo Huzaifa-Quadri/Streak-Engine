@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
@@ -13,25 +14,25 @@ connectDB();
 const app = express();
 
 // Middleware
+app.use(compression()); // Gzip all responses
+
 app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
-      // Normalize: Remove trailing slash from both env var and incoming origin for comparison
       const normalizedAllowed = allowedOrigin.replace(/\/$/, "");
       const normalizedOrigin = origin ? origin.replace(/\/$/, "") : "";
 
-      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
       if (normalizedOrigin === normalizedAllowed) {
         callback(null, true);
       } else {
-        console.log("Blocked by CORS:", origin); // Debugging
+        console.log("Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // Allow cookies
+    credentials: true,
   }),
 );
 app.use(express.json());
@@ -66,4 +67,25 @@ app.listen(PORT, () => {
   📍 Port: ${PORT}
   🌐 Health Check: http://localhost:${PORT}/api/health
   `);
+
+  // Keep-alive: Self-ping every 15 minutes to prevent Render free-tier cold starts
+  if (process.env.RENDER_EXTERNAL_URL || process.env.KEEP_ALIVE_URL) {
+    const keepAliveUrl =
+      process.env.KEEP_ALIVE_URL ||
+      `${process.env.RENDER_EXTERNAL_URL}/api/health`;
+
+    setInterval(
+      async () => {
+        try {
+          const res = await fetch(keepAliveUrl);
+          console.log(`🏓 Keep-alive ping: ${res.status}`);
+        } catch (err) {
+          console.error("Keep-alive ping failed:", err.message);
+        }
+      },
+      15 * 60 * 1000,
+    ); // Every 15 minutes
+
+    console.log(`  🏓 Keep-alive enabled: pinging ${keepAliveUrl} every 15min`);
+  }
 });

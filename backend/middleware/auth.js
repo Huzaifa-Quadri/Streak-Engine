@@ -6,7 +6,6 @@ const protect = async (req, res, next) => {
     // Get token from cookie OR Authorization header
     let token = req.cookies.token;
 
-    // If no cookie, check Authorization header (for cross-origin requests)
     if (!token && req.headers.authorization?.startsWith("Bearer")) {
       token = req.headers.authorization.split(" ")[1];
     }
@@ -21,8 +20,10 @@ const protect = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Get user from token
-    req.user = await User.findById(decoded.id).select("-password");
+    // Get user from token — lean query, only fetch fields needed for auth check
+    req.user = await User.findById(decoded.id).select(
+      "_id username activeRoom currentStreakStart",
+    );
 
     if (!req.user) {
       return res.status(401).json({
