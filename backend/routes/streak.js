@@ -21,6 +21,7 @@ router.post("/start", protect, async (req, res) => {
 
     // Set the streak start time
     user.currentStreakStart = new Date();
+    user.headstartHours = 0;
     await user.save();
 
     res.json({
@@ -30,6 +31,65 @@ router.post("/start", protect, async (req, res) => {
     });
   } catch (error) {
     console.error("Start streak error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+// @route   POST /api/streak/start-from
+// @desc    Start a streak from a specific past date/time (headstart)
+// @access  Private
+router.post("/start-from", protect, async (req, res) => {
+  try {
+    const { startDate } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (user.currentStreakStart) {
+      return res.status(400).json({
+        success: false,
+        message: "You already have an active streak",
+      });
+    }
+
+    const customStart = new Date(startDate);
+    const now = new Date();
+
+    // Validation: date must be in the past
+    if (customStart >= now) {
+      return res.status(400).json({
+        success: false,
+        message: "Start date must be in the past",
+      });
+    }
+
+    // Validation: not more than 365 days in the past
+    const maxPast = new Date();
+    maxPast.setFullYear(maxPast.getFullYear() - 1);
+    if (customStart < maxPast) {
+      return res.status(400).json({
+        success: false,
+        message: "Start date cannot be more than 1 year in the past",
+      });
+    }
+
+    // Calculate headstart hours
+    const diffMs = now - customStart;
+    const headstartHrs = Math.floor(diffMs / (1000 * 60 * 60));
+
+    user.currentStreakStart = customStart;
+    user.headstartHours = headstartHrs;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: `Streak started with ${headstartHrs}h headstart! 🚀`,
+      currentStreakStart: user.currentStreakStart,
+      headstartHours: headstartHrs,
+    });
+  } catch (error) {
+    console.error("Start-from streak error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",
@@ -59,15 +119,17 @@ router.post("/reset", protect, async (req, res) => {
     const durationMs = now - startDate;
     const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
 
-    // Add to streak history
+    // Add to streak history (with headstart info if applicable)
     user.streakHistory.push({
       startDate: startDate,
       endDate: now,
       durationHours: durationHours,
+      headstartHours: user.headstartHours || 0,
     });
 
     // Reset current streak
     user.currentStreakStart = null;
+    user.headstartHours = 0;
     await user.save();
 
     res.json({

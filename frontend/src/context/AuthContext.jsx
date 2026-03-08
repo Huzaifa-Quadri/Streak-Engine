@@ -99,6 +99,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const startStreakFrom = async (startDate) => {
+    try {
+      const response = await api.post("/streak/start-from", { startDate });
+      if (response.data.success) {
+        await refreshUser();
+        return { success: true, message: response.data.message };
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to start streak";
+      return { success: false, message };
+    }
+  };
+
   const resetStreak = async () => {
     try {
       const response = await api.post("/streak/reset");
@@ -174,6 +187,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     refreshUser,
     startStreak,
+    startStreakFrom,
     resetStreak,
     addJournal,
     clearHistory,

@@ -136,6 +136,11 @@ const History = () => {
                 </div>
                 <div className="history__card-duration">
                   {formatDuration(streak.durationHours)}
+                  {streak.headstartHours > 0 && (
+                    <span className="headstart-tag">
+                      ⚡ {formatDuration(streak.headstartHours)}
+                    </span>
+                  )}
                 </div>
                 <div className="history__card-date">
                   <IoTimeOutline style={{ marginRight: "4px" }} />

@@ -23,12 +23,18 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    // Headstart tracking for active streak
+    headstartHours: {
+      type: Number,
+      default: 0, // Hours of headstart the user took (0 = normal start)
+    },
     // History of past streaks
     streakHistory: [
       {
         startDate: { type: Date, required: true },
-        endDate: { type: Date, required: true }, // The moment they pressed reset
-        durationHours: { type: Number, required: true }, // Calculated on backend
+        endDate: { type: Date, required: true },
+        durationHours: { type: Number, required: true },
+        headstartHours: { type: Number, default: 0 }, // 0 = normal, >0 = headstart
       },
     ],
     // Daily Journal entries

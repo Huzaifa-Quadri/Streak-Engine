@@ -128,7 +128,7 @@ router.get("/current", async (req, res) => {
 
     const room = await Room.findById(user.activeRoom).populate(
       "members",
-      "username currentStreakStart avatar",
+      "username currentStreakStart headstartHours avatar",
     );
 
     if (!room) {
@@ -149,8 +149,9 @@ router.get("/current", async (req, res) => {
       return {
         _id: member._id,
         username: member.username,
-        avatar: member.avatar, // In case we add avatars later
+        avatar: member.avatar,
         durationHours,
+        headstartHours: member.headstartHours || 0,
         isHost: room.host.equals(member._id),
         isMe: member._id.equals(userId),
       };

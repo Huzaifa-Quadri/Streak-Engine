@@ -364,6 +364,51 @@ body {
     width: 100%;
     max-width: 280px;
     margin-top: $spacing-lg;
+
+    &-row {
+      display: flex;
+      gap: $spacing-sm;
+      width: 100%;
+    }
+  }
+
+  &__btn-start {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__btn-calendar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    flex-shrink: 0;
+    border-radius: $radius-md;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: all $transition-normal;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &-img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      pointer-events: none;
+    }
   }
 
   &__next-badge {
@@ -2348,5 +2393,154 @@ body {
   &:hover {
     background: rgba(255, 255, 255, 0.12);
     color: $text-primary;
+  }
+}
+
+// ============================================
+// Headstart Date/Time Picker Modal
+// ============================================
+
+// Reusing modal-overlay class
+.headstart-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  @include flex-center;
+  z-index: $z-modal + 10;
+  animation: fade-in 0.25s ease-out;
+}
+
+.headstart-modal {
+  position: relative;
+  width: calc(100% - $spacing-xl * 2);
+  max-width: 400px;
+  padding: $spacing-xl $spacing-lg;
+  background: linear-gradient(
+    145deg,
+    rgba(25, 25, 35, 0.95),
+    rgba(15, 15, 20, 0.98)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $radius-xl;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: modal-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+
+  &__title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $spacing-md;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    text-align: left;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-md;
+    margin-top: $spacing-md;
+  }
+
+  &__desc {
+    font-size: 0.85rem;
+    color: $text-secondary;
+    line-height: 1.5;
+  }
+
+  &__date-input {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: $text-primary;
+    font-size: 1rem;
+    font-family: $font-mono;
+    outline: none;
+    transition: border-color $transition-normal;
+
+    &:focus {
+      border-color: $neon-cyan;
+    }
+
+    // Style the calendar icon
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+  }
+
+  &__hour-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+
+  &__hour-btn {
+    padding: 8px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $radius-sm;
+    background: rgba(255, 255, 255, 0.03);
+    color: $text-secondary;
+    font-size: 0.75rem;
+    font-family: $font-mono;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: rgba($neon-cyan, 0.1);
+      border-color: rgba($neon-cyan, 0.3);
+      color: $text-primary;
+    }
+
+    &--active {
+      background: rgba($neon-cyan, 0.2);
+      border-color: $neon-cyan;
+      color: $neon-cyan;
+      font-weight: 600;
+      box-shadow: 0 0 8px rgba($neon-cyan, 0.2);
+    }
+  }
+}
+
+// ============================================
+// Headstart Tag (used in History & Arena)
+// ============================================
+.headstart-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  margin-left: $spacing-sm;
+  padding: 2px 6px 2px 4px;
+  border-radius: 4px;
+  background: rgba(#ffd700, 0.12);
+  border: 1px solid rgba(#ffd700, 0.25);
+  color: #ffd700;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  &--compact {
+    font-size: 0.6rem;
+    padding: 1px 6px;
+    margin-left: 0;
+    margin-bottom: 2px;
   }
 }

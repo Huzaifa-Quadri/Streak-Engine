@@ -151,6 +151,7 @@ router.get("/me", protect, async (req, res) => {
         id: user._id,
         username: user.username,
         currentStreakStart: user.currentStreakStart,
+        headstartHours: user.headstartHours || 0,
         lastCheckIn: user.lastCheckIn,
         streakHistory: user.streakHistory,
         journals: user.journals,

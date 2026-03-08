@@ -197,6 +197,12 @@ const BadgeImage = ({ imageName, label }) => {
   const [extensionIndex, setExtensionIndex] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
 
+  // Reset when badge changes (e.g. headstart jumps to a new badge)
+  React.useEffect(() => {
+    setExtensionIndex(0);
+    setShowFallback(false);
+  }, [imageName]);
+
   const handleError = () => {
     // Try next extension
     if (extensionIndex < EXTENSIONS.length - 1) {

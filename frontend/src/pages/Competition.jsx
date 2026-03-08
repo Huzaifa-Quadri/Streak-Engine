@@ -338,6 +338,11 @@ const Competition = () => {
                 </div>
 
                 <div className="leaderboard__score">
+                  {member.headstartHours > 0 && (
+                    <span className="headstart-tag headstart-tag--compact">
+                      ⚡ {formatDuration(member.headstartHours)}
+                    </span>
+                  )}
                   <span className="score-value">
                     {formatDuration(member.durationHours)}
                   </span>
