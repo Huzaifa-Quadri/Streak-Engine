@@ -62,7 +62,4 @@ const UserSchema = new mongoose.Schema(
   },
 );
 
-// Index for fast username lookups (login, register, duplicate check)
-UserSchema.index({ username: 1 });
-
 module.exports = mongoose.model("User", UserSchema);

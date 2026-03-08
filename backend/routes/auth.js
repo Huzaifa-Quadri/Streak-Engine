@@ -133,6 +133,8 @@ router.post("/logout", (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
     expires: new Date(0),
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   res.json({ success: true, message: "Logged out successfully" });
 });
@@ -170,7 +172,7 @@ router.get("/me", protect, async (req, res) => {
 // @access  Private
 router.put("/profile", protect, async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, currentPassword } = req.body;
     const user = await User.findById(req.user._id);
 
     if (username) {
@@ -178,6 +180,22 @@ router.put("/profile", protect, async (req, res) => {
         return res.status(400).json({
           success: false,
           message: "Username must be at least 3 characters",
+        });
+      }
+
+      // Require password verification for username change
+      if (!currentPassword) {
+        return res.status(400).json({
+          success: false,
+          message: "Password is required to change username",
+        });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          success: false,
+          message: "Incorrect password",
         });
       }
 
@@ -249,10 +267,12 @@ router.delete("/account", protect, async (req, res) => {
     }
 
     await User.findByIdAndDelete(req.user._id);
-
+    // Clear the auth cookie with proper cross-origin settings
     res.cookie("token", "", {
       httpOnly: true,
       expires: new Date(0),
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.json({
