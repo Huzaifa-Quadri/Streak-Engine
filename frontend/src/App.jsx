@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Competition from "./pages/Competition";
 import Loader from "./components/Loader";
+import ProgressLoader from "./components/ProgressLoader";
 import "./styles/App.scss";
 
 // Lazy-load LandingPage — three.js/gsap/framer-motion only downloaded when needed
@@ -44,7 +45,7 @@ const PublicRoute = ({ children }) => {
   const location = useLocation();
 
   if (loading) {
-    return <Loader />;
+    return <ProgressLoader />;
   }
 
   // If user is logged in and trying to access public pages (like Landing, Login, Register)

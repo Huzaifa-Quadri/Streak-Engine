@@ -1057,6 +1057,63 @@ body {
   }
 }
 
+// 3D Progress Loader (first-time loading for non-logged-in users)
+.progress-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: $bg-dark;
+  @include flex-center;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  &__title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: $neon-cyan;
+    @include text-glow($neon-cyan);
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  &__subtitle {
+    font-size: 0.85rem;
+    color: $text-muted;
+    letter-spacing: 1px;
+    transition: opacity 0.3s ease;
+    min-height: 1.4em;
+
+    &--fading {
+      opacity: 0;
+    }
+  }
+
+  &__bar {
+    width: 100%;
+  }
+
+  &__percent {
+    font-family: $font-mono;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow:
+      0 0 8px rgba(255, 255, 255, 0.4),
+      0 0 20px rgba(255, 255, 255, 0.15);
+    letter-spacing: 1px;
+  }
+}
+
 // Toast / Notification
 .toast {
   position: fixed;
@@ -2104,10 +2161,15 @@ body {
 }
 
 // ============================================
-// Edit Profile Page
+// Edit Profile Page — Accordion Tiles
 // ============================================
 .edit-profile {
   gap: $spacing-lg;
+
+  // Left-align the header
+  .page__header-row {
+    justify-content: flex-start;
+  }
 
   &__container {
     display: flex;
@@ -2117,16 +2179,114 @@ body {
     flex: 1;
   }
 
-  &__form {
+  // 3D Tile Card
+  &__tile {
+    border-radius: $radius-lg;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: perspective(800px) rotateX(0deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      transform: perspective(800px) rotateX(-1deg) translateY(-2px);
+    }
+
+    &--open {
+      border-color: rgba($neon-cyan, 0.3);
+      box-shadow:
+        0 8px 28px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba($neon-cyan, 0.1);
+
+      .edit-profile__tile-arrow {
+        transform: rotate(180deg);
+      }
+
+      .edit-profile__tile-icon {
+        color: $neon-cyan;
+      }
+    }
+  }
+
+  &__tile-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-lg;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+
+  &__tile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    background: rgba($neon-cyan, 0.08);
+    color: $text-secondary;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    flex-shrink: 0;
+
+    &--feedback {
+      background: rgba(#ffd700, 0.08);
+      color: #ffd700;
+    }
+  }
+
+  &__tile-title {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__tile-arrow {
+    font-size: 1.1rem;
+    color: $text-muted;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+  }
+
+  &__tile-body {
+    padding: 0 $spacing-lg $spacing-lg;
     display: flex;
     flex-direction: column;
     gap: $spacing-md;
+    animation: tile-expand 0.25s ease;
+  }
+
+  &__feedback-text {
+    font-size: 0.9rem;
+    color: $text-secondary;
+    line-height: 1.6;
   }
 
   &__danger-zone {
     margin-top: auto;
     padding-top: $spacing-lg;
-    border-top: 1px solid rgba($neon-red, 0.2);
+    border-top: 1px solid rgba($neon-red, 0.15);
+  }
+}
+
+@keyframes tile-expand {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
