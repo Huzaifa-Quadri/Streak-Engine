@@ -29,7 +29,7 @@ const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <Loader />;
+    return <ProgressLoader />;
   }
 
   if (!user) {
@@ -77,7 +77,7 @@ const AppRoutes = () => {
         path="/"
         element={
           <PublicRoute>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={null}>
               <LandingPage />
             </Suspense>
           </PublicRoute>

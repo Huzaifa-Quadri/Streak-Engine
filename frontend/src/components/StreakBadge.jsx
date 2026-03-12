@@ -178,13 +178,19 @@ export const getBadgeInfo = (hours) => {
 
 // Get next badge info for progress display
 export const getNextBadgeInfo = (hours) => {
-  const days = Math.floor(hours / 24);
+  const daysElapsed = hours / 24;
 
   for (const badge of BADGES) {
-    if (badge.days > days) {
+    // Next badge is the first one where badge.days > completed days
+    if (badge.days > Math.floor(daysElapsed)) {
+      const daysRemaining = Math.max(0, badge.days - daysElapsed);
+      const d = Math.floor(daysRemaining);
+      const h = Math.floor((daysRemaining - d) * 24);
+
       return {
         ...badge,
-        daysRemaining: badge.days - days,
+        daysRemaining: d,
+        hoursRemaining: h,
       };
     }
   }
@@ -264,8 +270,9 @@ const StreakBadge = ({ hours = 0 }) => {
         <div className="home__next-badge">
           <span>
             Next: <strong>{nextBadge.label}</strong> in{" "}
-            {nextBadge.daysRemaining} day
-            {nextBadge.daysRemaining !== 1 ? "s" : ""}
+            {nextBadge.daysRemaining > 0 && `${nextBadge.daysRemaining} d `}
+            {nextBadge.hoursRemaining} hr
+            {nextBadge.hoursRemaining !== 1 ? "s" : ""}
           </span>
         </div>
       )}

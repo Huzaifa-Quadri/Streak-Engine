@@ -20,8 +20,13 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
       }
     } catch (err) {
-      // Not logged in - clear any stale token
-      localStorage.removeItem("token");
+      // Only clear token if explicitly unauthorized (401/403)
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
+        localStorage.removeItem("token");
+      }
       setUser(null);
     } finally {
       setLoading(false);
@@ -82,6 +87,14 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
       }
     } catch (err) {
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
+        localStorage.removeItem("token");
+        setUser(null);
+        window.location.href = "/login";
+      }
       console.error("Refresh error:", err);
     }
   };
