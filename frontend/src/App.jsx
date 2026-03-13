@@ -5,7 +5,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import BottomNav from "./components/BottomNav";
@@ -43,6 +43,12 @@ const ProtectedRoute = ({ children }) => {
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
+
+  // Keep-alive ping from client: wakes up the server while user reads landing page
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + "/health" || "http://localhost:5000/api/health")
+      .catch((err) => console.log("Health ping silenced:", err));
+  }, []);
 
   if (loading) {
     return <ProgressLoader />;
