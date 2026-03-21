@@ -27,8 +27,7 @@ const RoomSchema = new mongoose.Schema({
   ],
   createdAt: {
     type: Date,
-    default: Date.now,
-    expires: 86400, // Auto-delete room after 24 hours
+    default: Date.now
   },
 });
 
