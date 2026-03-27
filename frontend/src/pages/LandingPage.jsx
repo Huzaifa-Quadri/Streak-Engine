@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo, Suspense } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -13,11 +13,13 @@ import {
   Box,
   Torus,
   Environment,
+  View,
+  PerspectiveCamera,
 } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useAuth } from "../hooks/useAuth";
-import "./LandingPage.scss";
+import "../styles/LandingPage.scss";
 
 // Register Plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -38,7 +40,7 @@ const HyperText = ({ text }) => {
             if (index < iteration) {
               return text[index];
             }
-            return ALPHABET[Math.floor(Math.random() * 26)];
+            return ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
           })
           .join(""),
       );
@@ -66,48 +68,7 @@ const HyperText = ({ text }) => {
 
 // 1. Heatmap 3D (The "Ignited" Streak)
 const Heatmap3D = () => {
-  const count = 30; // Number of floating embers
-  const mesh = useRef(null);
-  const light = useRef(null);
-
-  // Generate random initial positions
-  const particles = useMemo(() => {
-    const temp = [];
-    for (let i = 0; i < count; i++) {
-      const t = Math.random() * 100;
-      const factor = 20 + Math.random() * 100;
-      const speed = 0.01 + Math.random() / 200;
-      const xFactor = -0.5 + Math.random() * 1;
-      const yFactor = -0.5 + Math.random() * 1;
-      const zFactor = -0.5 + Math.random() * 1;
-      temp.push({ t, factor, speed, xFactor, yFactor, zFactor, mx: 0, my: 0 });
-    }
-    return temp;
-  }, [count]);
-
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime();
-
-    particles.forEach((particle, i) => {
-      let { t: time, factor, speed, xFactor, yFactor, zFactor } = particle;
-
-      // Upward movement (Fire)
-      const t0 = (particle.t = time + speed / 2); // Speed up
-      const x = Math.sin(t0 * 3 + xFactor * 10) * ((t0 % 5) * 0.2); // Wiggle
-      const y = (t0 % 5) * 0.8 - 2; // Rise from -2 to +2
-      const z = Math.cos(t0 * 3 + zFactor * 10) * ((t0 % 5) * 0.2); // Wiggle
-
-      // Reset if too high
-      // Using a dummy object to set instance matrices would be performant,
-      // but for <30 items, individual meshes are fine for readability here.
-    });
-
-    // Since we need to animate multiple meshes efficiently, let's use a simpler "Jumping Blocks" approach
-    // which is cleaner for this R3F setup without InstancedMesh complexity
-  });
-
-  // Simpler "Exciting" Animation: The "Equalizer" / "City" Stagger
-  // A grid of blocks that shoots up randomly like pistons
+  // Grid-piston animation logic
   const groupRef = useRef();
 
   useFrame((state) => {
@@ -116,7 +77,7 @@ const Heatmap3D = () => {
       // Random piston motion
       // Use Noise-like chaos
       const noise = Math.sin(t * 5 + i * 200) + Math.cos(t * 3 + i * 10);
-      child.scale.y = 1 + Math.max(0, noise * 2); // Shoot up only
+      child.scale.y = 1 + Math.max(0, noise * 0.6); // Shoot up only slightly
       child.position.y = (child.scale.y * 1) / 2 - 1; // Anchor to bottom
 
       // Color Shift based on height
@@ -390,12 +351,14 @@ const LandingPage = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero Text Flicker
-      gsap.fromTo(
-        ".highlight::before",
-        { width: "0%" },
-        { width: "100%", duration: 2, ease: "power4.out", delay: 0.5 },
-      );
+      // Hero Reveal Elements (CSS handles the pseudo-elements)
+      gsap.from(".landing-page__hero-left h1, .landing-page__hero-btn", {
+        x: -50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power2.out",
+      });
 
       // Heatmap Reveal
       gsap.from(".landing-page__heatmap-card", {
@@ -415,6 +378,22 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page" ref={containerRef}>
+      <Canvas
+        className="landing-page__global-canvas"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 10,
+        }}
+        eventSource={containerRef}
+      >
+        <View.Port />
+      </Canvas>
+
       <CustomCursor />
 
       {/* BACKGROUND AURORA */}
@@ -440,25 +419,28 @@ const LandingPage = () => {
         </div>
 
         <div className="landing-page__hero-right">
-          <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} color="#00F5FF" intensity={2} />
-            <pointLight
-              position={[-10, -5, -10]}
-              color="#8A2BE2"
-              intensity={2}
-            />
-            <Stars
-              radius={100}
-              depth={50}
-              count={5000}
-              factor={4}
-              saturation={0}
-              fade
-              speed={1}
-            />
-            <EngineCore />
-          </Canvas>
+          <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute" }}>
+            <Suspense fallback={null}>
+              <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={45} onUpdate={(c) => c.lookAt(0,0,0)} />
+              <ambientLight intensity={0.5} />
+              <pointLight position={[10, 10, 10]} color="#00F5FF" intensity={2} />
+              <pointLight
+                position={[-10, -5, -10]}
+                color="#8A2BE2"
+                intensity={2}
+              />
+              <Stars
+                radius={100}
+                depth={50}
+                count={5000}
+                factor={4}
+                saturation={0}
+                fade
+                speed={1}
+              />
+              <EngineCore />
+            </Suspense>
+          </View>
         </div>
       </section>
 
@@ -468,47 +450,59 @@ const LandingPage = () => {
         <div className="landing-page__heatmap-grid">
           {/* Card 1: Heatmap */}
           <div className="landing-page__heatmap-card landing-page__heatmap-card--large">
-            <Canvas camera={{ position: [0, 5, 5], fov: 45 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[5, 10, 5]} intensity={2} color="#00F5FF" />
-              <Heatmap3D />
-            </Canvas>
-            <h3>Streak Heatmap</h3>
-            <p>Visualizing momentum. A living record of your battles won.</p>
+            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+              <Suspense fallback={null}>
+                <PerspectiveCamera makeDefault position={[0, 5, 5]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <ambientLight intensity={0.5} />
+                <pointLight position={[5, 10, 5]} intensity={2} color="#00F5FF" />
+                <Heatmap3D />
+              </Suspense>
+            </View>
+            <h3 style={{ position: "relative", zIndex: 2 }}>Streak Heatmap</h3>
+            <p style={{ position: "relative", zIndex: 2 }}>Visualizing momentum. A living record of your battles won.</p>
           </div>
 
           {/* Card 2: PvP */}
           <div className="landing-page__heatmap-card">
-            <Canvas camera={{ position: [0, 0, 5] }}>
-              <ambientLight intensity={0.3} />
-              <pointLight position={[2, 3, 4]} intensity={2} color="#FFD700" />
-              <Environment preset="city" />
-              <Trophy3D />
-            </Canvas>
-            <h3>PvP Protocol</h3>
-            <p>Compete for the crown.</p>
+            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+              <Suspense fallback={null}>
+                <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <ambientLight intensity={0.3} />
+                <pointLight position={[2, 3, 4]} intensity={2} color="#FFD700" />
+                <Environment preset="city" />
+                <Trophy3D />
+              </Suspense>
+            </View>
+            <h3 style={{ position: "relative", zIndex: 2 }}>PvP Protocol</h3>
+            <p style={{ position: "relative", zIndex: 2 }}>Compete for the crown.</p>
           </div>
 
           {/* Card 3: Atomic */}
           <div className="landing-page__heatmap-card">
-            <Canvas camera={{ position: [0, 0, 6] }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[-2, 3, 4]} intensity={2} color="#00F5FF" />
-              <Atom3D />
-            </Canvas>
-            <h3>Atomic Tracking</h3>
-            <p>Precision time-logging.</p>
+            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+              <Suspense fallback={null}>
+                <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <ambientLight intensity={0.5} />
+                <pointLight position={[-2, 3, 4]} intensity={2} color="#00F5FF" />
+                <Atom3D />
+              </Suspense>
+            </View>
+            <h3 style={{ position: "relative", zIndex: 2 }}>Atomic Tracking</h3>
+            <p style={{ position: "relative", zIndex: 2 }}>Precision time-logging.</p>
           </div>
 
           {/* Card 4: Neuro */}
           <div className="landing-page__heatmap-card">
-            <Canvas camera={{ position: [0, 0, 5] }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[2, 2, 2]} intensity={2} color="#8A2BE2" />
-              <Neuro3D />
-            </Canvas>
-            <h3>Neuro Sync</h3>
-            <p>Optimize your mental state.</p>
+            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+              <Suspense fallback={null}>
+                <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <ambientLight intensity={0.5} />
+                <pointLight position={[2, 2, 2]} intensity={2} color="#8A2BE2" />
+                <Neuro3D />
+              </Suspense>
+            </View>
+            <h3 style={{ position: "relative", zIndex: 2 }}>Neuro Sync</h3>
+            <p style={{ position: "relative", zIndex: 2 }}>Optimize your mental state.</p>
           </div>
         </div>
       </section>
