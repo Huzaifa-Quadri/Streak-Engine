@@ -67,7 +67,7 @@ const HyperText = ({ text }) => {
 // --- 3D VISUALS FOR CARDS ---
 
 // 1. Heatmap 3D (The "Ignited" Streak)
-const Heatmap3D = () => {
+const Heatmap3D = ({ scale = 1 }) => {
   // Grid-piston animation logic
   const groupRef = useRef();
 
@@ -101,7 +101,7 @@ const Heatmap3D = () => {
   }, []);
 
   return (
-    <group ref={groupRef} rotation={[0.4, 0, 0]}>
+    <group ref={groupRef} rotation={[0.4, 0, 0]} scale={scale}>
       {grid.map((pos, i) => (
         <mesh key={i} position={[pos.x, 0, pos.z]}>
           <boxGeometry args={[0.6, 1, 0.6]} />
@@ -117,10 +117,10 @@ const Heatmap3D = () => {
 };
 
 // 2. PvP Trophy 3D (Floating Crown/Chalice)
-const Trophy3D = () => {
+const Trophy3D = ({ scale = 1 }) => {
   return (
     <Float speed={4} rotationIntensity={2} floatIntensity={2}>
-      <group>
+      <group scale={scale}>
         {/* Crown Base */}
         <mesh position={[0, -0.5, 0]}>
           <cylinderGeometry args={[0.8, 0.8, 0.3, 8]} />
@@ -166,7 +166,7 @@ const Trophy3D = () => {
 };
 
 // 3. Atom 3D (Atomic Tracking)
-const Atom3D = () => {
+const Atom3D = ({ scale = 1 }) => {
   const groupRef = useRef();
 
   useFrame((state) => {
@@ -175,7 +175,7 @@ const Atom3D = () => {
   });
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} scale={scale}>
       {/* Nucleus */}
       <mesh>
         <sphereGeometry args={[0.7, 32, 32]} />
@@ -248,7 +248,7 @@ const Atom3D = () => {
 };
 
 // 4. Neuro 3D (Neural Network)
-const Neuro3D = () => {
+const Neuro3D = ({ scale = 1 }) => {
   const meshRef = useRef();
 
   useFrame((state) => {
@@ -259,6 +259,7 @@ const Neuro3D = () => {
 
   return (
     <Float speed={2} rotationIntensity={1} floatIntensity={0.5}>
+      <group scale={scale}>
       <Icosahedron ref={meshRef} args={[2, 1]}>
         <meshStandardMaterial
           color="#00F5FF"
@@ -280,6 +281,7 @@ const Neuro3D = () => {
           speed={3}
         />
       </mesh>
+      </group>
     </Float>
   );
 };
@@ -342,6 +344,22 @@ const EngineCore = () => {
 
 const LandingPage = () => {
   const { user } = useAuth();
+
+  // State for responsive model scaling
+  const [modelScale, setModelScale] = useState(1);
+  const [heatmapScale, setHeatmapScale] = useState(1);
+
+  // Adjust scale based on viewport width (desktop vs mobile)
+  useEffect(() => {
+    const updateScale = () => {
+      const isMobile = window.innerWidth < 1024; // Use 1024 for more consistent desktop targeting
+      setModelScale(isMobile ? 0.75 : 1.3);
+      setHeatmapScale(isMobile ? 0.75 : 1.6);
+    };
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
 
   // Refs
   const containerRef = useRef(null);
@@ -419,11 +437,23 @@ const LandingPage = () => {
         </div>
 
         <div className="landing-page__hero-right">
-          <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute" }}>
+          <View
+            className="landing-page__view"
+            style={{ width: "100%", height: "100%", position: "absolute" }}
+          >
             <Suspense fallback={null}>
-              <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={45} onUpdate={(c) => c.lookAt(0,0,0)} />
+              <PerspectiveCamera
+                makeDefault
+                position={[0, 0, 8]}
+                fov={45}
+                onUpdate={(c) => c.lookAt(0, 0, 0)}
+              />
               <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} color="#00F5FF" intensity={2} />
+              <pointLight
+                position={[10, 10, 10]}
+                color="#00F5FF"
+                intensity={2}
+              />
               <pointLight
                 position={[-10, -5, -10]}
                 color="#8A2BE2"
@@ -450,59 +480,139 @@ const LandingPage = () => {
         <div className="landing-page__heatmap-grid">
           {/* Card 1: Heatmap */}
           <div className="landing-page__heatmap-card landing-page__heatmap-card--large">
-            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+            <View
+              className="landing-page__view"
+              style={{
+                width: "100%",
+                height: "65%",
+                position: "absolute",
+                top: "5%",
+                left: 0,
+              }}
+            >
               <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[0, 5, 5]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <PerspectiveCamera
+                  makeDefault
+                  position={[0, 5, 5]}
+                  fov={75}
+                  onUpdate={(c) => c.lookAt(0, 0, 0)}
+                />
                 <ambientLight intensity={0.5} />
-                <pointLight position={[5, 10, 5]} intensity={2} color="#00F5FF" />
-                <Heatmap3D />
+                <pointLight
+                  position={[5, 10, 5]}
+                  intensity={2}
+                  color="#00F5FF"
+                />
+                <Heatmap3D scale={heatmapScale} />
               </Suspense>
             </View>
             <h3 style={{ position: "relative", zIndex: 2 }}>Streak Heatmap</h3>
-            <p style={{ position: "relative", zIndex: 2 }}>Visualizing momentum. A living record of your battles won.</p>
+            <p style={{ position: "relative", zIndex: 2 }}>
+              Visualizing momentum. A living record of your battles won.
+            </p>
           </div>
 
           {/* Card 2: PvP */}
           <div className="landing-page__heatmap-card">
-            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+            <View
+              className="landing-page__view"
+              style={{
+                width: "100%",
+                height: "65%",
+                position: "absolute",
+                top: "5%",
+                left: 0,
+              }}
+            >
               <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <PerspectiveCamera
+                  makeDefault
+                  position={[0, 0, 6]}
+                  fov={75}
+                  onUpdate={(c) => c.lookAt(0, 0, 0)}
+                />
                 <ambientLight intensity={0.3} />
-                <pointLight position={[2, 3, 4]} intensity={2} color="#FFD700" />
+                <pointLight
+                  position={[2, 3, 4]}
+                  intensity={2}
+                  color="#FFD700"
+                />
                 <Environment preset="city" />
-                <Trophy3D />
+                <Trophy3D scale={modelScale} />
               </Suspense>
             </View>
             <h3 style={{ position: "relative", zIndex: 2 }}>PvP Protocol</h3>
-            <p style={{ position: "relative", zIndex: 2 }}>Compete for the crown.</p>
+            <p style={{ position: "relative", zIndex: 2 }}>
+              Compete for the crown.
+            </p>
           </div>
 
           {/* Card 3: Atomic */}
           <div className="landing-page__heatmap-card">
-            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+            <View
+              className="landing-page__view"
+              style={{
+                width: "100%",
+                height: "65%",
+                position: "absolute",
+                top: "5%",
+                left: 0,
+              }}
+            >
               <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <PerspectiveCamera
+                  makeDefault
+                  position={[0, 0, 8]}
+                  fov={75}
+                  onUpdate={(c) => c.lookAt(0, 0, 0)}
+                />
                 <ambientLight intensity={0.5} />
-                <pointLight position={[-2, 3, 4]} intensity={2} color="#00F5FF" />
-                <Atom3D />
+                <pointLight
+                  position={[-2, 3, 4]}
+                  intensity={2}
+                  color="#00F5FF"
+                />
+                <Atom3D scale={modelScale} />
               </Suspense>
             </View>
             <h3 style={{ position: "relative", zIndex: 2 }}>Atomic Tracking</h3>
-            <p style={{ position: "relative", zIndex: 2 }}>Precision time-logging.</p>
+            <p style={{ position: "relative", zIndex: 2 }}>
+              Precision time-logging.
+            </p>
           </div>
 
           {/* Card 4: Neuro */}
           <div className="landing-page__heatmap-card">
-            <View className="landing-page__view" style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+            <View
+              className="landing-page__view"
+              style={{
+                width: "100%",
+                height: "65%",
+                position: "absolute",
+                top: "5%",
+                left: 0,
+              }}
+            >
               <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={75} onUpdate={(c) => c.lookAt(0,0,0)} />
+                <PerspectiveCamera
+                  makeDefault
+                  position={[0, 0, 6]}
+                  fov={75}
+                  onUpdate={(c) => c.lookAt(0, 0, 0)}
+                />
                 <ambientLight intensity={0.5} />
-                <pointLight position={[2, 2, 2]} intensity={2} color="#8A2BE2" />
-                <Neuro3D />
+                <pointLight
+                  position={[2, 2, 2]}
+                  intensity={2}
+                  color="#8A2BE2"
+                />
+                <Neuro3D scale={modelScale} />
               </Suspense>
             </View>
             <h3 style={{ position: "relative", zIndex: 2 }}>Neuro Sync</h3>
-            <p style={{ position: "relative", zIndex: 2 }}>Optimize your mental state.</p>
+            <p style={{ position: "relative", zIndex: 2 }}>
+              Optimize your mental state.
+            </p>
           </div>
         </div>
       </section>
