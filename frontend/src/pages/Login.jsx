@@ -66,6 +66,11 @@ const Login = () => {
               placeholder="Enter your password"
               autoComplete="current-password"
             />
+            <div style={{ textAlign: "right", marginTop: "8px" }}>
+              <Link to="/forgot-password" style={{ fontSize: "0.85rem", color: "var(--primary-color)" }}>
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
           {error && <div className="auth__error">{error}</div>}

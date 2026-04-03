@@ -12,13 +12,17 @@ import BottomNav from "./components/BottomNav";
 import Home from "./pages/Home";
 import History from "./pages/History";
 import Emergency from "./pages/Emergency";
+import { Toaster } from "sileo";
+import "sileo/styles.css";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Competition from "./pages/Competition";
-import Loader from "./components/Loader";
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyChangePassword from "./pages/VerifyChangePassword";
 import ProgressLoader from "./components/ProgressLoader";
+import EmailAlert from "./components/EmailAlert";
 import "./styles/App.scss";
 
 // Lazy-load LandingPage — three.js/gsap/framer-motion only downloaded when needed
@@ -46,8 +50,10 @@ const PublicRoute = ({ children }) => {
 
   // Keep-alive ping from client: wakes up the server while user reads landing page
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + "/health" || "http://localhost:5000/api/health")
-      .catch((err) => console.log("Health ping silenced:", err));
+    fetch(
+      import.meta.env.VITE_API_URL + "/health" ||
+        "http://localhost:5000/api/health",
+    ).catch((err) => console.log("Health ping silenced:", err));
   }, []);
 
   if (loading) {
@@ -68,6 +74,7 @@ const PublicRoute = ({ children }) => {
 const AppLayout = ({ children }) => {
   return (
     <div className="app">
+      <EmailAlert />
       {children}
       <BottomNav />
     </div>
@@ -106,6 +113,11 @@ const AppRoutes = () => {
             <Register />
           </PublicRoute>
         }
+      />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route
+        path="/verify/change-password/:token"
+        element={<VerifyChangePassword />}
       />
 
       {/* Protected Routes - Moved to /app */}
@@ -178,6 +190,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Toaster position="top-center" />
         <AppRoutes />
       </AuthProvider>
     </BrowserRouter>

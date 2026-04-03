@@ -5,12 +5,14 @@ import {
   IoPersonOutline,
   IoLockClosedOutline,
   IoPersonAdd,
+  IoMailOutline,
 } from "react-icons/io5";
 
 const Register = () => {
   const navigate = useNavigate();
   const { register, error, setError } = useAuth();
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,8 +20,14 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!username.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       setError("Please fill in all fields");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
       return;
     }
 
@@ -39,7 +47,7 @@ const Register = () => {
     }
 
     setLoading(true);
-    const result = await register(username, password);
+    const result = await register(username, email, password);
     setLoading(false);
 
     if (result.success) {
@@ -70,6 +78,21 @@ const Register = () => {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Choose a username"
               autoComplete="username"
+            />
+          </div>
+
+          <div className="auth__input-group">
+            <label htmlFor="email">
+              <IoMailOutline style={{ marginRight: "6px" }} />
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              autoComplete="email"
             />
           </div>
 
