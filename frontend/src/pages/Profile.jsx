@@ -5,7 +5,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { FaCrown } from "react-icons/fa";
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const navigate = useNavigate();
 
   // Basic stats calculations
@@ -98,6 +98,83 @@ const Profile = () => {
       >
         Edit Profile
       </button>
+
+      {/* Require Email */}
+      {!user?.email && (
+        <div
+          className="profile__settings-section"
+          style={{ marginTop: "2rem" }}
+        >
+          <h3>Account & Settings</h3>
+
+          <div
+            className="profile__add-email"
+            style={{
+              backgroundColor: "var(--card-bg, #2a2a2a)",
+              padding: "15px",
+              borderRadius: "10px",
+              marginTop: "1rem",
+            }}
+          >
+            <h4
+              style={{
+                marginBottom: "10px",
+                color: "var(--warning-color, #f39c12)",
+              }}
+            >
+              ⚠️ Missing Account Email
+            </h4>
+            <p
+              style={{
+                fontSize: "0.85rem",
+                color: "var(--text-secondary)",
+                marginBottom: "15px",
+              }}
+            >
+              Secure your account and enable password resets by linking an
+              email.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const email = formData.get("email");
+                if (email) {
+                  const { success } = await updateProfile({ email });
+                  if (success) {
+                    window.location.reload();
+                  } else {
+                    alert("Failed to link email. It might be already in use.");
+                  }
+                }
+              }}
+            >
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "6px",
+                  border: "none",
+                  marginBottom: "10px",
+                  backgroundColor: "rgba(255,255,255,0.05)",
+                  color: "white",
+                }}
+              />
+              <button
+                type="submit"
+                className="btn btn--primary"
+                style={{ width: "100%" }}
+              >
+                Save Email
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

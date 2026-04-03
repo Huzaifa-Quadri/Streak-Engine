@@ -27,6 +27,7 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.13.0",
     "sass": "^1.97.3",
+    "sileo": "^0.1.5",
     "three": "^0.182.0"
   }
 }
