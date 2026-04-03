@@ -27,6 +27,7 @@ const EditProfile = () => {
   const [usernameLoading, setUsernameLoading] = useState(false);
 
   // Password state
+  const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
@@ -84,6 +85,11 @@ const EditProfile = () => {
     setError(null);
     setSuccess(null);
 
+    if (!currentPassword) {
+      setError("Please enter your current password.");
+      return;
+    }
+
     if (!password) {
       setError("Please enter a new password.");
       return;
@@ -101,9 +107,10 @@ const EditProfile = () => {
 
     try {
       setPasswordLoading(true);
-      const res = await api.put("/auth/profile", { password });
+      const res = await api.put("/auth/profile", { password, currentPassword });
       if (res.data.success) {
         setSuccess("Password changed successfully!");
+        setCurrentPassword("");
         setPassword("");
         setConfirmPassword("");
       }
@@ -259,6 +266,17 @@ const EditProfile = () => {
               onSubmit={handleUpdatePassword}
             >
               <div className="input-group">
+                <label htmlFor="ep-current-password">Current Password</label>
+                <input
+                  type="password"
+                  id="ep-current-password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current password"
+                  required
+                />
+              </div>
+              <div className="input-group">
                 <label htmlFor="ep-password">New Password</label>
                 <input
                   type="password"
@@ -280,13 +298,32 @@ const EditProfile = () => {
                   required
                 />
               </div>
-              <button
-                type="submit"
-                className="btn btn--primary"
-                disabled={passwordLoading}
-              >
-                {passwordLoading ? "Changing..." : "Change Password"}
-              </button>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <button
+                  type="submit"
+                  className="btn btn--primary"
+                  disabled={passwordLoading}
+                >
+                  {passwordLoading ? "Changing..." : "Change Password"}
+                </button>
+                <button
+                  type="button"
+                  style={{ 
+                    background: "transparent", 
+                    border: "none", 
+                    color: "var(--primary-color, #00fff5)", 
+                    cursor: "pointer", 
+                    padding: "0",
+                    fontWeight: "600",
+                    fontSize: "0.9rem",
+                    textDecoration: "underline",
+                    boxShadow: "none"
+                  }}
+                  onClick={() => navigate("/forgot-password")}
+                >
+                  Forgot Password?
+                </button>
+              </div>
             </form>
           )}
         </div>
