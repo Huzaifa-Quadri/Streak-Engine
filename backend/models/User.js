@@ -9,11 +9,20 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       minlength: [3, "Username must be at least 3 characters"],
     },
+    email: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows null/missing for old users while enforcing uniqueness for new ones
+      trim: true,
+      lowercase: true,
+    },
     password: {
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     // Active Streak Data
     currentStreakStart: {
       type: Date,
