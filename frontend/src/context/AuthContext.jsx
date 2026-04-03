@@ -33,10 +33,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (username, password) => {
+  const register = async (username, email, password) => {
     try {
       setError(null);
-      const response = await api.post("/auth/register", { username, password });
+      const response = await api.post("/auth/register", { username, email, password });
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         setUser(response.data.user);
@@ -190,6 +190,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      const response = await api.post("/auth/forgot-password", { email });
+      if (response.data.success) {
+        return { success: true, message: response.data.message };
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to send reset email";
+      return { success: false, message };
+    }
+  };
+
+  const resetPassword = async (token, password) => {
+    try {
+      const response = await api.put(`/auth/reset-password/${token}`, { password });
+      if (response.data.success) {
+        return { success: true, message: response.data.message };
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to reset password";
+      return { success: false, message };
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -206,6 +230,8 @@ export const AuthProvider = ({ children }) => {
     clearHistory,
     updateProfile,
     deleteAccount,
+    forgotPassword,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
