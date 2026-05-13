@@ -63,7 +63,7 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`
-  🔥 No Fap API Server Running!
+  🔥 Streak Engine API Server Running!
   📍 Port: ${PORT}
   🌐 Health Check: http://localhost:${PORT}/api/health
   `);
