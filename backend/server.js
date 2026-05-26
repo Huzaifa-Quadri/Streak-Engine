@@ -68,7 +68,7 @@ app.listen(PORT, () => {
   🌐 Health Check: http://localhost:${PORT}/api/health
   `);
 
-  // Keep-alive: Self-ping every 15 minutes to prevent Render free-tier cold starts
+  // Keep-alive: Self-ping every 5 minutes to prevent Render free-tier cold starts
   if (process.env.RENDER_EXTERNAL_URL || process.env.KEEP_ALIVE_URL) {
     const keepAliveUrl =
       process.env.KEEP_ALIVE_URL ||
@@ -83,9 +83,9 @@ app.listen(PORT, () => {
           console.error("Keep-alive ping failed:", err.message);
         }
       },
-      15 * 60 * 1000,
-    ); // Every 15 minutes
+      5 * 60 * 1000,
+    ); // Every 5 minutes
 
-    console.log(`  🏓 Keep-alive enabled: pinging ${keepAliveUrl} every 15min`);
+    console.log(`  🏓 Keep-alive enabled: pinging ${keepAliveUrl} every 5min`);
   }
 });

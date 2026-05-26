@@ -1,15 +1,19 @@
-# 🛡️ Stay Strong - The Ultimate Discipline Tracker
+# 🛡️ Stay Strong - Stay Unbroken
 
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 > **"He who conquers himself is the mightiest warrior."**
 
-**Stay Strong** is a gamified habit tracking application designed to help users break addiction and build iron-clad discipline. With a sleek **Cyberpunk/Neon Aesthetic**, it combines personal streak tracking with real-time PvP **Competition Modes** to keep you motivated.
+**Streak Engine** is a gamified habit tracking application designed to help users break addiction and build iron-clad discipline. With a sleek **Cyberpunk/Neon Aesthetic**, it combines personal streak tracking with real-time PvP **Competition Modes** to keep you motivated.
 
 ## 🚀 Live Demo
 
 **[👉 CLICK HERE TO TRY THE APP 👈](https://streak-engine-seven.vercel.app/)**
+
+### 🎥 Preview Video
+
+[![Streak Engine Preview](https://img.youtube.com/vi/yDG73IPBrk4/0.jpg)](https://youtube.com/shorts/yDG73IPBrk4?feature=share)
 
 ---
 
