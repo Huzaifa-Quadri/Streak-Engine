@@ -13,7 +13,6 @@ const Home = () => {
     seconds: 0,
   });
   const [totalHours, setTotalHours] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [showRelapseModal, setShowRelapseModal] = useState(false);
 
@@ -76,26 +75,16 @@ const Home = () => {
   };
 
   const handleStartStreak = async () => {
-    setLoading(true);
     const result = await startStreak();
-    setLoading(false);
-
-    if (result.success) {
-      showToast(result.message, "success");
-    } else {
+    if (!result.success) {
       showToast(result.message, "error");
     }
   };
 
   const handleResetStreak = async () => {
-    setLoading(true);
-    const result = await resetStreak();
-    setLoading(false);
     setShowRelapseModal(false);
-
-    if (result.success) {
-      showToast(result.message, "success");
-    } else {
+    const result = await resetStreak();
+    if (!result.success) {
       showToast(result.message, "error");
     }
   };
@@ -120,35 +109,11 @@ const Home = () => {
 
   const handleHeadstartConfirm = async () => {
     setShowDatePicker(false);
-    setLoading(true);
-
-    // Build the ISO date from selected date + hour
     const startDate = new Date(
       `${selectedDate}T${String(selectedHour).padStart(2, "0")}:00:00`,
     );
-
-    // Immediately calculate elapsed so badge/timer updates instantly
-    const diff = Date.now() - startDate.getTime();
-    if (diff > 0) {
-      const totalSeconds = Math.floor(diff / 1000);
-      const totalMins = Math.floor(totalSeconds / 60);
-      const totalHrs = Math.floor(totalMins / 60);
-      const days = Math.floor(totalHrs / 24);
-      setTotalHours(totalHrs);
-      setElapsed({
-        days,
-        hours: totalHrs % 24,
-        minutes: totalMins % 60,
-        seconds: totalSeconds % 60,
-      });
-    }
-
     const result = await startStreakFrom(startDate.toISOString());
-    setLoading(false);
-
-    if (result?.success) {
-      showToast(result.message, "success");
-    } else {
+    if (!result?.success) {
       showToast(result?.message || "Failed to start streak", "error");
     }
   };
@@ -204,17 +169,13 @@ const Home = () => {
             <button
               className="btn btn--success btn--large animate-pulse home__btn-start"
               onClick={handleStartStreak}
-              disabled={loading}
             >
               <IoPlayCircle size={24} />
-              {loading ? "Starting..." : "Start Journey"}
+              Start Journey
             </button>
             <button
               className="home__btn-calendar"
-              onClick={(e) => {
-                openDatePicker();
-              }}
-              disabled={loading}
+              onClick={openDatePicker}
               title="Start from a specific date"
             >
               <img
@@ -228,10 +189,9 @@ const Home = () => {
           <button
             className="btn btn--danger btn--large"
             onClick={() => setShowRelapseModal(true)}
-            disabled={loading}
           >
             <IoRefreshCircle size={24} />
-            {loading ? "Resetting..." : "I Relapsed"}
+            I Relapsed
           </button>
         )}
       </div>
@@ -240,7 +200,6 @@ const Home = () => {
         isOpen={showRelapseModal}
         onConfirm={handleResetStreak}
         onCancel={() => setShowRelapseModal(false)}
-        loading={loading}
       />
 
       {/* Headstart Date/Time Picker Modal */}

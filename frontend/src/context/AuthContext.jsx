@@ -100,41 +100,53 @@ export const AuthProvider = ({ children }) => {
   };
 
   const startStreak = async () => {
+    const previousUser = user;
+    setUser((prev) => ({ ...prev, currentStreakStart: new Date().toISOString() }));
     try {
       const response = await api.post("/streak/start");
       if (response.data.success) {
         await refreshUser();
         return { success: true, message: response.data.message };
       }
+      setUser(previousUser);
+      return { success: false, message: response.data.message || "Failed to start streak" };
     } catch (err) {
-      const message = err.response?.data?.message || "Failed to start streak";
-      return { success: false, message };
+      setUser(previousUser);
+      return { success: false, message: err.response?.data?.message || "Failed to start streak" };
     }
   };
 
   const startStreakFrom = async (startDate) => {
+    const previousUser = user;
+    setUser((prev) => ({ ...prev, currentStreakStart: startDate }));
     try {
       const response = await api.post("/streak/start-from", { startDate });
       if (response.data.success) {
         await refreshUser();
         return { success: true, message: response.data.message };
       }
+      setUser(previousUser);
+      return { success: false, message: response.data.message || "Failed to start streak" };
     } catch (err) {
-      const message = err.response?.data?.message || "Failed to start streak";
-      return { success: false, message };
+      setUser(previousUser);
+      return { success: false, message: err.response?.data?.message || "Failed to start streak" };
     }
   };
 
   const resetStreak = async () => {
+    const previousUser = user;
+    setUser((prev) => ({ ...prev, currentStreakStart: null }));
     try {
       const response = await api.post("/streak/reset");
       if (response.data.success) {
         await refreshUser();
         return { success: true, message: response.data.message };
       }
+      setUser(previousUser);
+      return { success: false, message: response.data.message || "Failed to reset streak" };
     } catch (err) {
-      const message = err.response?.data?.message || "Failed to reset streak";
-      return { success: false, message };
+      setUser(previousUser);
+      return { success: false, message: err.response?.data?.message || "Failed to reset streak" };
     }
   };
 

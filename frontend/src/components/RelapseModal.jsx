@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { IoWarning, IoClose } from "react-icons/io5";
 
-const RelapseModal = ({ isOpen, onConfirm, onCancel, loading }) => {
+const RelapseModal = ({ isOpen, onConfirm, onCancel }) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e) => {
@@ -61,14 +61,12 @@ const RelapseModal = ({ isOpen, onConfirm, onCancel, loading }) => {
           <button
             className="relapse-modal__btn relapse-modal__btn--confirm"
             onClick={onConfirm}
-            disabled={loading}
           >
-            {loading ? "Resetting..." : "Back to Zero"}
+            Back to Zero
           </button>
           <button
             className="relapse-modal__btn relapse-modal__btn--cancel"
             onClick={onCancel}
-            disabled={loading}
           >
             Keep Going 💪
           </button>
